@@ -1,7 +1,5 @@
 ﻿#include "Fish.hpp"
 
-#include "Aquarium.hpp"
-
 namespace aquarium
 {
   Fish::Fish( FishRace race, bool herbivore, bool carnivore, uint16_t age, std::string const & name, Gender gender )
@@ -14,24 +12,27 @@ namespace aquarium
   {
   }
 
-  void Fish::onNewTurn( Aquarium & aqua )
+  FishPtr Fish::onNextTurn( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
   {
+    FishPtr ret;
     grow();
     damage( 1 );
 
     if ( isAlive() )
     {
-      doOnNewTurn( aqua );
+      doOnNextTurn();
 
       if ( getHealth() <= 5 )
       {
-        eat( aqua );
+        eat( engine, fishes, seaweeds );
       }
       else if ( canReproduce() )
       {
-        reproduce( aqua );
+        ret = reproduce( engine, fishes );
       }
     }
+
+    return ret;
   }
 
   void Fish::switchGender()
@@ -41,11 +42,13 @@ namespace aquarium
     std::cout << " to " << aquarium::manip( m_gender ) << "\n";
   }
 
-  void Fish::reproduce( Aquarium & aqua )
+  FishPtr Fish::reproduce( std::random_device & engine, FishArray const & fishes )
   {
+    FishPtr ret;
+
     try
     {
-      doReproduce( aqua );
+      ret = doReproduce( engine, fishes );
     }
     catch ( NoMateException & exc )
     {
@@ -57,13 +60,15 @@ namespace aquarium
       std::cout << "[" << aquarium::manip( this->getName() ) << "] tried to reproduce, but ";
       std::cout << exc.what() << ".\n";
     }
+
+    return ret;
   }
 
-  void Fish::eat( Aquarium & aqua )
+  void Fish::eat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
   {
     try
     {
-      doEat( aqua );
+      doEat( engine, fishes, seaweeds );
     }
     catch ( NoFoodException & exc )
     {

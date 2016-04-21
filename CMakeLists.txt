@@ -1,6 +1,6 @@
 cmake_minimum_required( VERSION 3.0 )
 
-project( Aquarium )
+project( Acuarium++ )
 
 set( PROJECTS_PLATFORM "x86" )
 if ( MSVC )

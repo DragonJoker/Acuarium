@@ -5,18 +5,17 @@
 namespace aquarium
 {
   FishFactory::FishFactory()
+    : m_creators{
+      {
+        { Basse, RacedFish< Basse >::create },
+        { Tuna, RacedFish< Tuna >::create },
+        { Clown, RacedFish< Clown >::create },
+        { Sole, RacedFish< Sole >::create },
+        { Bass, RacedFish< Bass >::create },
+        { Carp, RacedFish< Carp >::create }
+      }
+    }
   {
-    registerFishRace( Basse, RacedFish< Basse >::create );
-    registerFishRace( Tuna, RacedFish< Tuna >::create );
-    registerFishRace( Clown, RacedFish< Clown >::create );
-    registerFishRace( Sole, RacedFish< Sole >::create );
-    registerFishRace( Bass, RacedFish< Bass >::create );
-    registerFishRace( Carp, RacedFish< Carp >::create );
-  }
-
-  void FishFactory::registerFishRace( FishRace race, FishCreator const & creator )
-  {
-    m_creators[race] = creator;
   }
 
   FishPtr FishFactory::createFish( FishRace race, uint16_t age, std::string const & name, Gender gender )const

@@ -11,10 +11,10 @@ namespace aquarium
     Fish( FishRace race, bool herbivore, bool carnivore, uint16_t age, std::string const & name, Gender gender );
     virtual ~Fish() = default;
 
-    void onNewTurn( Aquarium & aqua );
+    FishPtr onNextTurn( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds );
+    FishPtr reproduce( std::random_device & engine, FishArray const & fishes );
+    void eat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds );
     void switchGender();
-    void reproduce( Aquarium & aqua );
-    void eat( Aquarium & aqua );
 
     inline std::string const & getName() const
     {
@@ -57,9 +57,9 @@ namespace aquarium
     }
 
   private:
-    virtual void doOnNewTurn( Aquarium & aqua ) = 0;
-    virtual void doReproduce( Aquarium & aqua ) = 0;
-    virtual void doEat( Aquarium & aqua ) = 0;
+    virtual void doOnNextTurn() = 0;
+    virtual void doEat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds ) = 0;
+    virtual FishPtr doReproduce( std::random_device & engine, FishArray const & fishes ) = 0;
 
   private:
     FishRace const m_race;

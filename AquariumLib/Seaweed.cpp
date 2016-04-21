@@ -1,7 +1,5 @@
 ﻿#include "Seaweed.hpp"
 
-#include "Aquarium.hpp"
-
 namespace aquarium
 {
   Seaweed::Seaweed( uint16_t age, uint16_t health )
@@ -9,29 +7,35 @@ namespace aquarium
   {
   }
 
-  void Seaweed::onNewTurn( Aquarium & aqua )
+  SeaweedPtr Seaweed::onNextTurn()
   {
+    SeaweedPtr child;
     grow();
 
     if ( isAlive() )
     {
-      doGrow( aqua );
+      child = doGrow();
     }
+
+    return child;
   }
 
-  void Seaweed::doGrow( Aquarium & aqua )
+  SeaweedPtr Seaweed::doGrow()
   {
+    SeaweedPtr child;
+
     if ( getHealth () >= 10 )
     {
       uint16_t const half( getHealth() / 2 );
-      auto child = std::make_shared< Seaweed >( 0u, half );
-      aqua.addSeaweed( std::move( child ) );
-	  damage( half );
+      child = std::make_shared< Seaweed >( 0u, half );
+      damage( half );
     }
     else
     {
       heal( 1 );
     }
+
+    return child;
   }
 
   bool operator==( Seaweed const & lhs, Seaweed const & rhs )
@@ -54,7 +58,7 @@ namespace aquarium
   std::istream & operator>>( std::istream & stream, Seaweed & seaweed )
   {
     std::string dump;
-    stream >> dump;
+    stream >> dump;// Seaweed
     stream >> static_cast< Living & >( seaweed );
     return stream;
   }

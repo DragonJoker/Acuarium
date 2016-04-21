@@ -45,17 +45,13 @@ namespace aquarium
   template<> struct IsHerbivore< Bass > : public std::true_type {};
   template<> struct IsHerbivore< Carp > : public std::true_type {};
 
-  template< FishRace Race > struct IsMonoGender : public std::false_type {};
-  template<> struct IsMonoGender< Carp > : public std::true_type {};
-  template<> struct IsMonoGender< Tuna > : public std::true_type {};
+  template< FishRace Race > struct IsAgingHermaphrodite : public std::false_type {};
+  template<> struct IsAgingHermaphrodite< Bass > : public std::true_type {};
+  template<> struct IsAgingHermaphrodite< Basse > : public std::true_type {};
 
-  template< FishRace Race > struct IsAgingHernaphrodite : public std::false_type {};
-  template<> struct IsAgingHernaphrodite< Bass > : public std::true_type {};
-  template<> struct IsAgingHernaphrodite< Basse > : public std::true_type {};
-
-  template< FishRace Race > struct IsOpportunisiticHernaphrodite : public std::false_type {};
-  template<> struct IsOpportunisiticHernaphrodite< Sole > : public std::true_type {};
-  template<> struct IsOpportunisiticHernaphrodite< Clown > : public std::true_type {};
+  template< FishRace Race > struct IsOpportunisiticHermaphrodite : public std::false_type {};
+  template<> struct IsOpportunisiticHermaphrodite< Sole > : public std::true_type {};
+  template<> struct IsOpportunisiticHermaphrodite< Clown > : public std::true_type {};
 
   class Aquarium;
   class Living;
@@ -76,7 +72,7 @@ namespace aquarium
   public:
     virtual char const * what() const noexcept
     {
-        return "No more food";
+      return "No more food";
     }
   };
 
@@ -86,7 +82,7 @@ namespace aquarium
   public:
     virtual char const * what() const noexcept
     {
-        return "No mate";
+      return "No mate";
     }
   };
 
@@ -96,7 +92,7 @@ namespace aquarium
   public:
     virtual char const * what() const noexcept
     {
-        return "Mate was not compatible";
+      return "Mate was not compatible";
     }
   };
 
@@ -115,14 +111,14 @@ namespace aquarium
   {
     GenderManip( Gender gender );
 
-    std::string m_str;
+    std::string const m_str;
   };
 
   struct RaceManip
   {
     RaceManip( FishRace race );
 
-    std::string m_str;
+    std::string const m_str;
   };
 
   template< typename T >

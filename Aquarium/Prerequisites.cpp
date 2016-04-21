@@ -1,10 +1,6 @@
 ﻿#include "Prerequisites.hpp"
 
 #include <Aquarium.hpp>
-#include <Fish.hpp>
-#include <Seaweed.hpp>
-
-#include <fstream>
 
 void updateAquarium( aquarium::Aquarium & aqua, TurnAddsMap & turnsAdds, uint32_t turn )
 {

@@ -6,18 +6,28 @@
 
 namespace aquarium
 {
-  void Aquarium::newTurn()
+  void Aquarium::nextTurn()
   {
     doAddNewComers();
 
     for ( auto & seaweed : m_seaweeds )
     {
-      seaweed->onNewTurn( *this );
+      auto child = seaweed->onNextTurn();
+
+      if ( child )
+      {
+        m_newSeaweeds.emplace_back( std::move( child ) );
+      }
     }
 
     for ( auto & fish : m_fishes )
     {
-      fish->onNewTurn( *this );
+      auto child = fish->onNextTurn( m_engine, m_fishes, m_seaweeds );
+
+      if ( child )
+      {
+        m_newFishes.emplace_back( std::move( child ) );
+      }
     }
   }
 
@@ -41,14 +51,14 @@ namespace aquarium
   {
     for ( auto & seaweed : m_newSeaweeds )
     {
-      m_seaweeds.push_back( std::move( seaweed ) );
+      m_seaweeds.emplace_back( std::move( seaweed ) );
     }
 
     m_newSeaweeds.clear();
 
     for ( auto & fish : m_newFishes )
     {
-      m_fishes.push_back( std::move( fish ) );
+      m_fishes.emplace_back( std::move( fish ) );
     }
 
     m_newFishes.clear();

@@ -1,10 +1,6 @@
-#include <Aquarium.hpp>
-#include <Fish.hpp>
-#include <Seaweed.hpp>
-
 #include "Prerequisites.hpp"
 
-#include <fstream>
+#include <Aquarium.hpp>
 
 int main( int argc, char * argv[] )
 {
@@ -34,7 +30,7 @@ int main( int argc, char * argv[] )
     std::cout << "***********************************************************************************\n";
     std::cout << "Actions:\n";
     std::cout << "****************************************\n\n";
-    aqua.newTurn();
+    aqua.nextTurn();
     updateAquarium( aqua, turns, turn );
     //saveAquarium( "aqua.poisson", aqua );
     std::cin.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );

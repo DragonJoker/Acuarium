@@ -1,49 +1,47 @@
 #include "Prerequisites.hpp"
 
-#include <Aquarium.hpp>
-#include <Fish.hpp>
 #include <FishFactory.hpp>
 #include <Seaweed.hpp>
 
-#include <sstream>
-#include <fstream>
-
-TurnAddsMap::iterator addTurn( std::sregex_iterator it, TurnAddsMap & turnsAdds )
+namespace
 {
-  std::smatch match{ *it };
-  std::stringstream sturn{ match[1] };
-  uint32_t turn{ 0 };
-  sturn >> turn;
-  return turnsAdds.insert( { turn, TurnAdds{} } ).first;
-}
-
-void addSeaweeds( std::sregex_iterator it, TurnAddsMap::iterator adds )
-{
-  std::smatch match{ *it };
-  std::stringstream scount{ match[1] };
-  std::stringstream sage{ match[2] };
-  uint16_t count{ 0u };
-  uint16_t age{ 0u };
-  scount >> count;
-  sage >> age;
-
-  for ( uint16_t i{ 0u }; i < count; ++i )
+  TurnAddsMap::iterator addTurn( std::sregex_iterator it, TurnAddsMap & turnsAdds )
   {
-    adds->second.m_seaweeds.emplace_back( std::make_shared< aquarium::Seaweed >( age ) );
+    std::smatch match{ *it };
+    std::stringstream sturn{ match[1] };
+    uint32_t turn{ 0 };
+    sturn >> turn;
+    return turnsAdds.insert( { turn, TurnAdds{} } ).first;
   }
-}
 
-void addFish( std::sregex_iterator it, TurnAddsMap::iterator adds )
-{
-  aquarium::FishFactory factory;
-  std::smatch match{ *it };
-  std::string name{ match[1] };
-  std::string race{ match[2] };
-  std::string gender{ match[3] };
-  std::stringstream sage{ match[4] };
-  uint16_t age{ 0u };
-  sage >> age;
-  adds->second.m_fishes.emplace_back( factory.createFish( aquarium::getRace( race ), age, name, aquarium::getGender( gender ) ) );
+  void addSeaweeds( std::sregex_iterator it, TurnAddsMap::iterator adds )
+  {
+    std::smatch match{ *it };
+    std::stringstream scount{ match[1] };
+    std::stringstream sage{ match[2] };
+    uint16_t count{ 0u };
+    uint16_t age{ 0u };
+    scount >> count;
+    sage >> age;
+  
+    for ( uint16_t i{ 0u }; i < count; ++i )
+    {
+      adds->second.m_seaweeds.emplace_back( std::make_shared< aquarium::Seaweed >( age ) );
+    }
+  }
+
+  void addFish( std::sregex_iterator it, TurnAddsMap::iterator adds )
+  {
+    aquarium::FishFactory factory;
+    std::smatch match{ *it };
+    std::string name{ match[1] };
+    std::string race{ match[2] };
+    std::string gender{ match[3] };
+    std::stringstream sage{ match[4] };
+    uint16_t age{ 0u };
+    sage >> age;
+    adds->second.m_fishes.emplace_back( factory.createFish( aquarium::getRace( race ), age, name, aquarium::getGender( gender ) ) );
+  }
 }
 
 void loadFromFile( std::string const & filename, TurnAddsMap & turnsAdds )

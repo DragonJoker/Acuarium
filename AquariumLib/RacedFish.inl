@@ -34,9 +34,9 @@
     template< FishRace Race, typename Enable >
     struct FishEatT
     {
-      static inline void eat( RacedFish< Race > & fish, Aquarium & aqua )
+      static inline void apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
       {
-        auto const & food = doGetRandom< NoFoodException >( aqua.getRandomEngine(), aqua.getFishes(), [&fish]( FishPtr const & candidate )
+        auto const & food = doGetRandom< NoFoodException >( engine, fishes, [&fish]( FishPtr const & candidate )
         {
           return candidate->isAlive() && candidate.get() != &fish && candidate->getRace() != fish.getRace();
         } );
@@ -50,9 +50,9 @@
     template< FishRace Race >
     struct FishEatT< Race, typename std::enable_if< IsHerbivore< Race >::value >::type >
     {
-      static inline void eat( RacedFish< Race > & fish, Aquarium & aqua )
+      static inline void apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
       {
-        auto const & food = doGetRandom< NoFoodException >( aqua.getRandomEngine(), aqua.getSeaweeds(), []( SeaweedPtr const & seaweed )
+        auto const & food = doGetRandom< NoFoodException >( engine, seaweeds, []( SeaweedPtr const & seaweed )
         {
           return seaweed->isAlive();
         } );
@@ -66,17 +66,17 @@
     //*********************************************************************************************
 
     template< FishRace Race, typename Enable >
-    struct FishNewTurnT
+    struct FishNextTurnT
     {
-      static inline void newTurn( RacedFish< Race > & fish, Aquarium & aqua )
+      static inline void apply( RacedFish< Race > & fish )
       {
       }
     };
 
     template< FishRace Race >
-    struct FishNewTurnT< Race, typename std::enable_if< IsAgingHernaphrodite< Race >::value >::type >
+    struct FishNextTurnT< Race, typename std::enable_if< IsAgingHermaphrodite< Race >::value >::type >
     {
-      static inline void newTurn( RacedFish< Race > & fish, Aquarium & aqua )
+      static inline void apply( RacedFish< Race > & fish )
       {
         if ( fish.getAge() == 10 && fish.getGender() == Male )
         {
@@ -90,16 +90,16 @@
     struct FishReproduce
     {
     protected:
-      static inline void doReproduce( Fish & fish, Fish & mate, FishRace race, Aquarium & aqua )
+      static inline FishPtr doApply( Fish & fish, Fish & mate, FishRace race, std::random_device & engine )
       {
         std::uniform_int_distribution< int > distribution{ 0, 1 };
-        auto child = FishFactory{}.createFish( race, 0, getRandomName( aqua.getRandomEngine() ), Gender( distribution( aqua.getRandomEngine() ) ) );
+        auto child = FishFactory{}.createFish( race, 0, getRandomName( engine ), Gender( distribution( engine ) ) );
         std::cout << "[" << manip( child->getName() ) << "] is born from the union of ";
         std::cout << "[" << manip( fish.getName() ) << "] and ";
         std::cout << "[" << manip( mate.getName() ) << "]\n";
         fish.hasReproduced();
         mate.hasReproduced();
-        aqua.addFish( std::move( child ) );
+        return child;
       }
     };
 
@@ -107,9 +107,9 @@
     struct FishReproduceT
       : public FishReproduce
     {
-      static inline void reproduce( RacedFish< Race > & fish, Aquarium & aqua )
+      static inline FishPtr apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes )
       {
-        auto const & mate = doGetRandom< NoMateException >( aqua.getRandomEngine(), aqua.getFishes(), [&fish]( FishPtr const & candidate )
+        auto const & mate = doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
         {
           return candidate->isAlive() && candidate.get() != &fish && candidate->canReproduce();
         } );
@@ -119,17 +119,17 @@
           throw WrongMateException{};
         }
 
-        FishReproduce::doReproduce( fish, *mate, Race, aqua );
+        return FishReproduce::doApply( fish, *mate, Race, engine );
       }
     };
 
     template< FishRace Race >
-    struct FishReproduceT< Race, typename std::enable_if< IsOpportunisiticHernaphrodite< Race >::value >::type >
+    struct FishReproduceT< Race, typename std::enable_if< IsOpportunisiticHermaphrodite< Race >::value >::type >
       : public FishReproduce
     {
-      static inline void reproduce( RacedFish< Race > & fish, Aquarium & aqua )
+      static inline FishPtr apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes )
       {
-        auto const & mate = doGetRandom< NoMateException >( aqua.getRandomEngine(), aqua.getFishes(), [&fish]( FishPtr const & candidate )
+        auto const & mate = doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
         {
           return candidate->isAlive() && candidate.get() != &fish && candidate->canReproduce();
         } );
@@ -144,7 +144,7 @@
           fish.switchGender();
         }
 
-        FishReproduce::doReproduce( fish, *mate, Race, aqua );
+        return FishReproduce::doApply( fish, *mate, Race, engine );
       }
     };
 

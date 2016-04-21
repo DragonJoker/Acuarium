@@ -9,10 +9,9 @@ namespace aquarium
   public:
     FishFactory();
 
-    void registerFishRace( FishRace race, FishCreator const & creator );
     FishPtr createFish( FishRace race, uint16_t age, std::string const & name, Gender gender )const;
 
   private:
-    std::map< FishRace, FishCreator > m_creators;
+    std::map< FishRace, FishCreator > const m_creators;
   };
 }

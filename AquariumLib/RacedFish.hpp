@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "Aquarium.hpp"
 #include "Fish.hpp"
 #include "Seaweed.hpp"
 
@@ -11,7 +10,7 @@ namespace aquarium
   namespace helper
   {
     template< FishRace Race, typename Enable=void > struct FishEatT;
-    template< FishRace Race, typename Enable=void > struct FishNewTurnT;
+    template< FishRace Race, typename Enable=void > struct FishNextTurnT;
     template< FishRace Race, typename Enable=void > struct FishReproduceT;
   }
 
@@ -35,19 +34,19 @@ namespace aquarium
     }
 
   private:
-    virtual void doOnNewTurn( Aquarium & aqua )
+    virtual void doOnNextTurn()
     {
-      helper::FishNewTurnT< Race >::newTurn( *this, aqua );
+      helper::FishNextTurnT< Race >::apply( *this );
     }
 
-    virtual void doEat( Aquarium & aqua )
+    virtual void doEat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
     {
-      helper::FishEatT< Race >::eat( *this, aqua );
+      helper::FishEatT< Race >::apply( *this, engine, fishes, seaweeds );
     }
 
-    virtual void doReproduce( Aquarium & aqua )
+    virtual FishPtr doReproduce( std::random_device & engine, FishArray const & fishes )
     {
-      helper::FishReproduceT< Race >::reproduce( *this, aqua );
+      return helper::FishReproduceT< Race >::apply( *this, engine, fishes );
     }
   };
 }

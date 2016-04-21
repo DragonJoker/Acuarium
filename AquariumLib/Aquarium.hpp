@@ -7,7 +7,7 @@ namespace aquarium
   class Aquarium
   {
   public:
-    void newTurn();
+    void nextTurn();
     void update();
     void addFish( FishPtr && fish );
     void addSeaweed( SeaweedPtr && seaweed );

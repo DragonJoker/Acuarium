@@ -10,10 +10,10 @@ namespace aquarium
   public:
     Seaweed( uint16_t age, uint16_t health = 10 );
 
-    void onNewTurn( Aquarium & aqua );
+    SeaweedPtr onNextTurn();
 
   private:
-    void doGrow( Aquarium & aqua );
+    SeaweedPtr doGrow();
   };
 
   bool operator==( Seaweed const & lhs, Seaweed const & rhs );
