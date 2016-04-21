@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Prerequisites.hpp"
 
@@ -32,7 +32,7 @@ namespace aquarium
       return m_seaweeds;
     }
 
-    inline std::random_device & getRandomEngine()
+    inline std::default_random_engine & getRandomEngine()
     {
       return m_engine;
     }
@@ -46,7 +46,8 @@ namespace aquarium
     FishArray m_newFishes;
     SeaweedArray m_seaweeds;
     SeaweedArray m_newSeaweeds;
-    std::random_device m_engine;
+    std::random_device m_device;
+    std::default_random_engine m_engine{ m_device() };
 
     friend std::istream & operator>>( std::istream & stream, Aquarium & aqua );
   };

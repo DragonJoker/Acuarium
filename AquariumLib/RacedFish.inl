@@ -1,11 +1,11 @@
-﻿namespace aquarium
+namespace aquarium
 {
   namespace helper
   {
     //*********************************************************************************************
 
     template< typename ExceptionT, typename LivingT, typename FuncT >
-    LivingT const & doGetRandom( std::random_device & engine, std::vector< LivingT > const & array, FuncT func )
+    LivingT const & doGetRandom( std::default_random_engine & engine, std::vector< LivingT > const & array, FuncT func )
     {
       using LivingTArray = std::vector< LivingT >;
       using LivingTArrayConstIt = typename LivingTArray::const_iterator;
@@ -34,7 +34,7 @@
     template< FishRace Race, typename Enable >
     struct FishEatT
     {
-      static inline void apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
+      static inline void apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
       {
         auto const & food = doGetRandom< NoFoodException >( engine, fishes, [&fish]( FishPtr const & candidate )
         {
@@ -50,7 +50,7 @@
     template< FishRace Race >
     struct FishEatT< Race, typename std::enable_if< IsHerbivore< Race >::value >::type >
     {
-      static inline void apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
+      static inline void apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
       {
         auto const & food = doGetRandom< NoFoodException >( engine, seaweeds, []( SeaweedPtr const & seaweed )
         {
@@ -90,7 +90,7 @@
     struct FishReproduce
     {
     protected:
-      static inline FishPtr doApply( Fish & fish, Fish & mate, FishRace race, std::random_device & engine )
+      static inline FishPtr doApply( Fish & fish, Fish & mate, FishRace race, std::default_random_engine & engine )
       {
         std::uniform_int_distribution< int > distribution{ 0, 1 };
         auto child = FishFactory{}.createFish( race, 0, getRandomName( engine ), Gender( distribution( engine ) ) );
@@ -107,7 +107,7 @@
     struct FishReproduceT
       : public FishReproduce
     {
-      static inline FishPtr apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes )
+      static inline FishPtr apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes )
       {
         auto const & mate = doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
         {
@@ -127,7 +127,7 @@
     struct FishReproduceT< Race, typename std::enable_if< IsOpportunisiticHermaphrodite< Race >::value >::type >
       : public FishReproduce
     {
-      static inline FishPtr apply( RacedFish< Race > & fish, std::random_device & engine, FishArray const & fishes )
+      static inline FishPtr apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes )
       {
         auto const & mate = doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
         {

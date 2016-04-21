@@ -98,7 +98,7 @@ namespace aquarium
 
   Gender getGender( std::string const & name );
   FishRace getRace( std::string const & name );
-  std::string getRandomName( std::random_device & engine );
+  std::string getRandomName( std::default_random_engine & engine );
 
   struct NameManip
   {

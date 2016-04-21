@@ -1,4 +1,4 @@
-﻿#include "Prerequisites.hpp"
+#include "Prerequisites.hpp"
 
 #include <FishFactory.hpp>
 #include <Seaweed.hpp>
@@ -48,7 +48,8 @@ namespace
     FishFactory factory;
     uint16_t fishes{ 0u };
     askIntValue( "Number of fishes? ", fishes );
-    std::random_device engine;
+    std::random_device device;
+    std::default_random_engine engine{ device() };
 
     for ( uint16_t i{ 0u }; i < fishes; ++i )
     {

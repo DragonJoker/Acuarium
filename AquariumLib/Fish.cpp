@@ -1,4 +1,4 @@
-﻿#include "Fish.hpp"
+#include "Fish.hpp"
 
 namespace aquarium
 {
@@ -12,7 +12,7 @@ namespace aquarium
   {
   }
 
-  FishPtr Fish::onNextTurn( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
+  FishPtr Fish::onNextTurn( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
   {
     FishPtr ret;
     grow();
@@ -42,7 +42,7 @@ namespace aquarium
     std::cout << " to " << aquarium::manip( m_gender ) << "\n";
   }
 
-  FishPtr Fish::reproduce( std::random_device & engine, FishArray const & fishes )
+  FishPtr Fish::reproduce( std::default_random_engine & engine, FishArray const & fishes )
   {
     FishPtr ret;
 
@@ -64,7 +64,7 @@ namespace aquarium
     return ret;
   }
 
-  void Fish::eat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
+  void Fish::eat( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
   {
     try
     {

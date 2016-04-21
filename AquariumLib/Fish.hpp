@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Living.hpp"
 
@@ -11,9 +11,9 @@ namespace aquarium
     Fish( FishRace race, bool herbivore, bool carnivore, uint16_t age, std::string const & name, Gender gender );
     virtual ~Fish() = default;
 
-    FishPtr onNextTurn( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds );
-    FishPtr reproduce( std::random_device & engine, FishArray const & fishes );
-    void eat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds );
+    FishPtr onNextTurn( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds );
+    FishPtr reproduce( std::default_random_engine & engine, FishArray const & fishes );
+    void eat( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds );
     void switchGender();
 
     inline std::string const & getName() const
@@ -58,8 +58,8 @@ namespace aquarium
 
   private:
     virtual void doOnNextTurn() = 0;
-    virtual void doEat( std::random_device & engine, FishArray const & fishes, SeaweedArray const & seaweeds ) = 0;
-    virtual FishPtr doReproduce( std::random_device & engine, FishArray const & fishes ) = 0;
+    virtual void doEat( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds ) = 0;
+    virtual FishPtr doReproduce( std::default_random_engine & engine, FishArray const & fishes ) = 0;
 
   private:
     FishRace const m_race;

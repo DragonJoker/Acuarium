@@ -78,7 +78,7 @@ namespace aquarium
     return it->second;
   }
 
-  std::string getRandomName( std::random_device & engine )
+  std::string getRandomName( std::default_random_engine & engine )
   {
     std::uniform_int_distribution< size_t > countDistribution{ 5, 10 };
     std::uniform_int_distribution< int32_t > charDistribution{ 32, 126 };
