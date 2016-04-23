@@ -1,6 +1,6 @@
 ﻿#include "Prerequisites.hpp"
 
-#include <Aquarium.hpp>
+#include <AquariumRenderer.hpp>
 
 void updateAquarium( aquarium::Aquarium & aqua, TurnAddsMap & turnsAdds, uint32_t turn )
 {
@@ -16,12 +16,6 @@ void updateAquarium( aquarium::Aquarium & aqua, TurnAddsMap & turnsAdds, uint32_
 
   turnsAdds.erase( turn );
   aqua.update();
-
-  std::cout << "\n";
-  std::cout << "****************************************\n";
-  std::cout << "Aquarium's content:\n";
-  std::cout << "****************************************\n\n";
-  std::cout << aqua << std::endl;
 }
 
 void saveAquarium( std::string const & filename, aquarium::Aquarium const & aqua )
