@@ -2,64 +2,75 @@
 
 namespace aquarium
 {
-  Seaweed::Seaweed( uint16_t age, uint16_t health )
-    : Living{ age, health }
-  {
-  }
+	Seaweed::Seaweed( uint16_t age, uint16_t health )
+		: Living{ age, health }
+	{
+	}
 
-  SeaweedPtr Seaweed::onNextTurn()
-  {
-    SeaweedPtr child;
-    grow();
+	void Seaweed::beEaten()
+	{
+		damage( 2 );
+	}
 
-    if ( isAlive() )
-    {
-      child = doGrow();
-    }
+	SeaweedPtr Seaweed::grow()
+	{
+		SeaweedPtr child;
+		age();
 
-    return child;
-  }
+		if ( isAlive() )
+		{
+			child = doGrow();
+		}
 
-  SeaweedPtr Seaweed::doGrow()
-  {
-    SeaweedPtr child;
+		return child;
+	}
 
-    if ( getHealth () >= 10 )
-    {
-      uint16_t const half( getHealth() / 2 );
-      child = std::make_shared< Seaweed >( 0u, half );
-      damage( half );
-    }
-    else
-    {
-      heal( 1 );
-    }
+	void Seaweed::doDie()
+	{
+		onDie( shared_from_this() );
+	}
 
-    return child;
-  }
+	SeaweedPtr Seaweed::doGrow()
+	{
+		SeaweedPtr child;
 
-  bool operator==( Seaweed const & lhs, Seaweed const & rhs )
-  {
-    return lhs.getAge() == rhs.getAge() && lhs.getHealth() == rhs.getHealth();
-  }
+		if ( getHealth() >= 10 )
+		{
+			uint16_t const half( getHealth() / 2 );
+			child = std::make_shared< Seaweed >( 0u, half );
+			child->onBorn( child, shared_from_this() );
+			damage( half );
+		}
+		else
+		{
+			heal( 1 );
+		}
 
-  bool operator!=( Seaweed const & lhs, Seaweed const & rhs )
-  {
-    return lhs.getAge() != rhs.getAge() || lhs.getHealth() != rhs.getHealth();
-  }
+		return child;
+	}
 
-  std::ostream & operator<<( std::ostream & stream, Seaweed const & seaweed )
-  {
-    stream << "Seaweed";
-    stream << static_cast< Living const & >( seaweed );
-    return stream;
-  }
+	bool operator==( Seaweed const & lhs, Seaweed const & rhs )
+	{
+		return lhs.getAge() == rhs.getAge() && lhs.getHealth() == rhs.getHealth();
+	}
 
-  std::istream & operator>>( std::istream & stream, Seaweed & seaweed )
-  {
-    std::string dump;
-    stream >> dump;// Seaweed
-    stream >> static_cast< Living & >( seaweed );
-    return stream;
-  }
+	bool operator!=( Seaweed const & lhs, Seaweed const & rhs )
+	{
+		return lhs.getAge() != rhs.getAge() || lhs.getHealth() != rhs.getHealth();
+	}
+
+	std::ostream & operator<<( std::ostream & stream, Seaweed const & seaweed )
+	{
+		stream << "Seaweed";
+		stream << static_cast< Living const & >( seaweed );
+		return stream;
+	}
+
+	std::istream & operator>>( std::istream & stream, Seaweed & seaweed )
+	{
+		std::string dump;
+		stream >> dump;// Seaweed
+		stream >> static_cast< Living & >( seaweed );
+		return stream;
+	}
 }

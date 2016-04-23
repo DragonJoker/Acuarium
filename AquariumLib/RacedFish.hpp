@@ -7,48 +7,56 @@
 
 namespace aquarium
 {
-  namespace helper
-  {
-    template< FishRace Race, typename Enable=void > struct FishEatT;
-    template< FishRace Race, typename Enable=void > struct FishNextTurnT;
-    template< FishRace Race, typename Enable=void > struct FishReproduceT;
-  }
+	namespace helper
+	{
+		template< FishRace Race, typename Enable = void > struct FishGrowT;
+		template< FishRace Race, typename Enable = void > struct FishEatT;
+		template< FishRace Race, typename Enable = void > struct FishReproduceT;
+	}
 
-  template< FishRace Race >
-  class RacedFish
-    : public Fish
-  {
-  public:
-    RacedFish( uint16_t age, std::string const & name, Gender gender )
-      : Fish{ Race, IsHerbivore< Race >::value, IsCarnivore< Race >::value, age, name, gender }
-    {
-    }
+	template< FishRace Race >
+	class RacedFish
+		: public Fish
+		, public std::enable_shared_from_this< RacedFish< Race > >
+	{
+		using SharedFromThis = std::enable_shared_from_this< RacedFish< Race > >;
 
-    virtual ~RacedFish()
-    {
-    }
+	public:
+		RacedFish( uint16_t age, std::string const & name, Gender gender )
+			: Fish{ Race, IsHerbivore< Race >::value, IsCarnivore< Race >::value, age, name, gender }
+		{
+		}
 
-    static FishPtr create( uint16_t age, std::string const & name, Gender gender )
-    {
-      return std::make_shared< RacedFish< Race > >( age, name, gender );
-    }
+		virtual ~RacedFish()
+		{
+		}
 
-  private:
-    virtual void doOnNextTurn()
-    {
-      helper::FishNextTurnT< Race >::apply( *this );
-    }
+		static FishPtr create( uint16_t age, std::string const & name, Gender gender )
+		{
+			return std::make_shared< RacedFish< Race > >( age, name, gender );
+		}
 
-    virtual void doEat( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
-    {
-      helper::FishEatT< Race >::apply( *this, engine, fishes, seaweeds );
-    }
+	private:
+		virtual void doGrow()
+		{
+			helper::FishGrowT< Race >::apply( SharedFromThis::shared_from_this() );
+		}
 
-    virtual FishPtr doReproduce( std::default_random_engine & engine, FishArray const & fishes )
-    {
-      return helper::FishReproduceT< Race >::apply( *this, engine, fishes );
-    }
-  };
+		virtual void doEat( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds, FishPtr & fish, SeaweedPtr & seaweed )
+		{
+			helper::FishEatT< Race >::apply( SharedFromThis::shared_from_this(), engine, fishes, seaweeds, fish, seaweed );
+		}
+
+		virtual FishPtr doReproduce( std::default_random_engine & engine, FishArray const & fishes, FishPtr & mate )
+		{
+			return helper::FishReproduceT< Race >::apply( SharedFromThis::shared_from_this(), engine, fishes, mate );
+		}
+
+		virtual FishPtr sharedFromThis()
+		{
+			return shared_from_this();
+		}
+	};
 }
 
 #include "RacedFish.inl"

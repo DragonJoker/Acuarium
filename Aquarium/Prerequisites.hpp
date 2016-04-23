@@ -1,8 +1,22 @@
 ﻿#pragma once
 
-#include <Prerequisites.hpp>
+#include <AquariumRendererPrerequisites.hpp>
 
 #include <fstream>
+
+namespace aquarium
+{
+	namespace render
+	{
+		class ConsoleSeaweedRenderer;
+		class ConsoleFishRenderer;
+		class ConsoleAquariumRenderer;
+
+		using ConsoleSeaweedRendererPtr = std::unique_ptr< ConsoleSeaweedRenderer >;
+		using ConsoleFishRendererPtr = std::unique_ptr< ConsoleFishRenderer >;
+		using ConsoleAquariumRendererPtr = std::unique_ptr< ConsoleAquariumRenderer >;
+	}
+}
 
 struct TurnAdds
 {

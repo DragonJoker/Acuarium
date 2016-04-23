@@ -1,153 +1,152 @@
 namespace aquarium
 {
-  namespace helper
-  {
-    //*********************************************************************************************
+	namespace helper
+	{
+		//*********************************************************************************************
 
-    template< typename ExceptionT, typename LivingT, typename FuncT >
-    LivingT const & doGetRandom( std::default_random_engine & engine, std::vector< LivingT > const & array, FuncT func )
-    {
-      using LivingTArray = std::vector< LivingT >;
-      using LivingTArrayConstIt = typename LivingTArray::const_iterator;
-      std::vector< LivingTArrayConstIt > targets;
+		namespace detail
+		{
+			template< typename ExceptionT, typename LivingT, typename FuncT >
+			LivingT const & doGetRandom( std::default_random_engine & engine, std::vector< LivingT > const & array, FuncT func )
+			{
+				using LivingTArray = std::vector< LivingT >;
+				using LivingTArrayConstIt = typename LivingTArray::const_iterator;
+				std::vector< LivingTArrayConstIt > targets;
 
-      for ( LivingTArrayConstIt it{ array.begin() }; it != array.end(); ++it )
-      {
-        if ( func( *it ) )
-        {
-          targets.push_back( it );
-        }
-      }
+				for ( LivingTArrayConstIt it{ array.begin() }; it != array.end(); ++it )
+				{
+					auto candidate = *it;
 
-      if ( targets.empty() )
-      {
-        throw ExceptionT{};
-      }
+					if ( candidate->isAlive() && func( candidate ) )
+					{
+						targets.push_back( it );
+					}
+				}
 
-      std::uniform_int_distribution< size_t > distribution{ 0u, targets.size() - 1u };
-      auto found = targets[distribution( engine )];
-      return *found;
-    }
+				if ( targets.empty() )
+				{
+					throw ExceptionT{};
+				}
 
-    //*********************************************************************************************
+				std::uniform_int_distribution< size_t > distribution{ 0u, targets.size() - 1u };
+				auto found = targets[distribution( engine )];
+				return *found;
+			}
+		}
 
-    template< FishRace Race, typename Enable >
-    struct FishEatT
-    {
-      static inline void apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
-      {
-        auto const & food = doGetRandom< NoFoodException >( engine, fishes, [&fish]( FishPtr const & candidate )
-        {
-          return candidate->isAlive() && candidate.get() != &fish && candidate->getRace() != fish.getRace();
-        } );
+		//*********************************************************************************************
 
-        std::cout << "[" << manip( fish.getName() ) << "] is feeding on [" << manip( food->getName() ) << "].\n";
-        food->damage( 4 );
-        fish.heal( 5 );
-      }
-    };
+		template< FishRace Race, typename Enable >
+		struct FishGrowT
+		{
+			using RacedFishPtr = std::shared_ptr< RacedFish< Race > >;
 
-    template< FishRace Race >
-    struct FishEatT< Race, typename std::enable_if< IsHerbivore< Race >::value >::type >
-    {
-      static inline void apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds )
-      {
-        auto const & food = doGetRandom< NoFoodException >( engine, seaweeds, []( SeaweedPtr const & seaweed )
-        {
-          return seaweed->isAlive();
-        } );
+			static inline void apply( RacedFishPtr fish )
+			{
+			}
+		};
 
-        std::cout << "[" << manip( fish.getName() ) << "] is feeding on a seaweed.\n";
-        food->damage( 2 );
-        fish.heal( 3 );
-      }
-    };
+		template< FishRace Race >
+		struct FishGrowT< Race, typename std::enable_if< IsAgingHermaphrodite< Race >::value >::type >
+		{
+			using RacedFishPtr = std::shared_ptr< RacedFish< Race > >;
 
-    //*********************************************************************************************
+			static inline void apply( RacedFishPtr fish )
+			{
+				if ( fish->getAge() == 10 && fish->getGender() == Male )
+				{
+					fish->switchGender();
+				}
+			}
+		};
 
-    template< FishRace Race, typename Enable >
-    struct FishNextTurnT
-    {
-      static inline void apply( RacedFish< Race > & fish )
-      {
-      }
-    };
+		//*********************************************************************************************
 
-    template< FishRace Race >
-    struct FishNextTurnT< Race, typename std::enable_if< IsAgingHermaphrodite< Race >::value >::type >
-    {
-      static inline void apply( RacedFish< Race > & fish )
-      {
-        if ( fish.getAge() == 10 && fish.getGender() == Male )
-        {
-          fish.switchGender();
-        }
-      }
-    };
+		template< FishRace Race, typename Enable >
+		struct FishEatT
+		{
+			using RacedFishPtr = std::shared_ptr< RacedFish< Race > >;
 
-    //*********************************************************************************************
+			static inline void apply( RacedFishPtr predator, std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds, FishPtr & fish, SeaweedPtr & seaweed )
+			{
+				auto food = detail::doGetRandom< NoFoodException >( engine, fishes, [&predator]( FishPtr const & candidate )
+				{
+					return candidate != predator && candidate->getRace() != predator->getRace();
+				} );
 
-    struct FishReproduce
-    {
-    protected:
-      static inline FishPtr doApply( Fish & fish, Fish & mate, FishRace race, std::default_random_engine & engine )
-      {
-        std::uniform_int_distribution< int > distribution{ 0, 1 };
-        auto child = FishFactory{}.createFish( race, 0, getRandomName( engine ), Gender( distribution( engine ) ) );
-        std::cout << "[" << manip( child->getName() ) << "] is born from the union of ";
-        std::cout << "[" << manip( fish.getName() ) << "] and ";
-        std::cout << "[" << manip( mate.getName() ) << "]\n";
-        fish.hasReproduced();
-        mate.hasReproduced();
-        return child;
-      }
-    };
+				food->beEaten();
+				fish = food;
+			}
+		};
 
-    template< FishRace Race, typename Enable >
-    struct FishReproduceT
-      : public FishReproduce
-    {
-      static inline FishPtr apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes )
-      {
-        auto const & mate = doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
-        {
-          return candidate->isAlive() && candidate.get() != &fish && candidate->canReproduce();
-        } );
+		template< FishRace Race >
+		struct FishEatT< Race, typename std::enable_if< IsHerbivore< Race >::value >::type >
+		{
+			using RacedFishPtr = std::shared_ptr< RacedFish< Race > >;
 
-        if ( mate->getRace() != fish.getRace() || mate->getGender() == fish.getGender() )
-        {
-          throw WrongMateException{};
-        }
+			static inline void apply( RacedFishPtr predator, std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds, FishPtr & fish, SeaweedPtr & seaweed )
+			{
+				auto food = detail::doGetRandom< NoFoodException >( engine, seaweeds, []( SeaweedPtr const & seaweed )
+				{
+					return true;
+				} );
 
-        return FishReproduce::doApply( fish, *mate, Race, engine );
-      }
-    };
+				food->beEaten();
+				seaweed = food;
+			}
+		};
 
-    template< FishRace Race >
-    struct FishReproduceT< Race, typename std::enable_if< IsOpportunisiticHermaphrodite< Race >::value >::type >
-      : public FishReproduce
-    {
-      static inline FishPtr apply( RacedFish< Race > & fish, std::default_random_engine & engine, FishArray const & fishes )
-      {
-        auto const & mate = doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
-        {
-          return candidate->isAlive() && candidate.get() != &fish && candidate->canReproduce();
-        } );
+		//*********************************************************************************************
 
-        if ( mate->getRace() != fish.getRace() )
-        {
-          throw WrongMateException{};
-        }
+		template< FishRace Race, typename Enable >
+		struct FishReproduceT
+		{
+			using RacedFishPtr = std::shared_ptr< RacedFish< Race > >;
 
-        if ( mate->getGender() == fish.getGender() )
-        {
-          fish.switchGender();
-        }
+			static inline FishPtr apply( RacedFishPtr fish, std::default_random_engine & engine, FishArray const & fishes, FishPtr & mate )
+			{
+				auto found = detail::doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
+				{
+					return candidate != fish && candidate->canReproduce();
+				} );
 
-        return FishReproduce::doApply( fish, *mate, Race, engine );
-      }
-    };
+				if ( found->getRace() != fish->getRace() || found->getGender() == fish->getGender() )
+				{
+					throw WrongMateException{ found };
+				}
 
-    //*********************************************************************************************
-  }
+				mate = found;
+				return FishFactory{}.createFish( Race, 0, getRandomName( engine ), Gender( std::uniform_int_distribution< int >{ 0, 1 }( engine ) ) );
+			}
+		};
+
+		template< FishRace Race >
+		struct FishReproduceT< Race, typename std::enable_if< IsOpportunisiticHermaphrodite< Race >::value >::type >
+		{
+			using RacedFishPtr = std::shared_ptr< RacedFish< Race > >;
+
+			static inline FishPtr apply( RacedFishPtr fish, std::default_random_engine & engine, FishArray const & fishes, FishPtr & mate )
+			{
+				auto found = detail::doGetRandom< NoMateException >( engine, fishes, [&fish]( FishPtr const & candidate )
+				{
+					return candidate != fish && candidate->canReproduce();
+				} );
+
+				if ( found->getRace() != fish->getRace() )
+				{
+					throw WrongMateException{ found };
+				}
+
+				if ( found->getGender() == fish->getGender() )
+				{
+					fish->switchGender();
+				}
+
+				mate = found;
+				return FishFactory{}.createFish( Race, 0, getRandomName( engine ), Gender( std::uniform_int_distribution< int >{ 0, 1 }( engine ) ) );
+			}
+		};
+
+		//*********************************************************************************************
+	}
 }
