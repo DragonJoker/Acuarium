@@ -1,7 +1,8 @@
 #include "Prerequisites.hpp"
 
-#include <FishFactory.hpp>
+#include <RaceFactory.hpp>
 #include <Seaweed.hpp>
+#include <Fish.hpp>
 
 using namespace aquarium;
 
@@ -39,21 +40,19 @@ namespace
     {
       uint16_t age{ 0u };
       askIntValue( "Age (0-19)? ", age, uint16_t{ 0u }, uint16_t{ 19u } );
-      adds.m_seaweeds.emplace_back( std::make_shared< aquarium::Seaweed >( age ) );
+      adds.m_seaweeds.emplace_back( age );
     }
   }
 
   void manualFillFishes( TurnAdds & adds )
   {
-    FishFactory factory;
+    RaceFactory factory;
     uint16_t fishes{ 0u };
     askIntValue( "Number of fishes? ", fishes );
-    std::random_device device;
-    std::default_random_engine engine{ device() };
 
     for ( uint16_t i{ 0u }; i < fishes; ++i )
     {
-      std::string name = getRandomName( engine );
+      std::string name = getRandomName();
       std::cout << "Fish " << ( i + 1 ) << " [" << name << "]\n";
       uint16_t age{ 0u };
       askIntValue( "Age (0-19)? ", age, uint16_t{ 0u }, uint16_t{ 19u } );
@@ -62,7 +61,7 @@ namespace
       uint16_t gender{ 0u };
       askIntValue( "  Gender\n    0: female\n    other: male\n    Your choice? ", gender );
 
-      adds.m_fishes.emplace_back( factory.createFish( FishRace( race ), age, name, gender == 0u ? Female : Male ) );
+      adds.m_fishes.emplace_back( factory.getRace( FishRace( race ) ), age, name, gender == 0u ? Female : Male );
     }
   }
 }

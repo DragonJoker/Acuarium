@@ -1,14 +1,14 @@
 #include "Fish.hpp"
 
+#include "FishRace.hpp"
+
 namespace aquarium
 {
-	Fish::Fish( FishRace race, bool herbivore, bool carnivore, uint16_t age, std::string const & name, Gender gender )
+	Fish::Fish( RacePtr race, uint16_t age, std::string const & name, Gender gender )
 		: Living{ age, 10u }
 		, m_race{ race }
 		, m_name{ name }
 		, m_gender{ gender }
-		, m_herbivore{ herbivore }
-		, m_carnivore{ carnivore }
 	{
 	}
 
@@ -17,7 +17,7 @@ namespace aquarium
 		damage( 4 );
 	}
 
-	FishPtr Fish::grow( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds, FishPtr & fishOrMate, SeaweedPtr & seaweed )
+	FishPtr Fish::grow( FishArray & fishes, SeaweedArray & seaweeds, Fish *& fishOrMate, Seaweed *& seaweed )
 	{
 		FishPtr ret;
 		age();
@@ -25,15 +25,15 @@ namespace aquarium
 
 		if ( isAlive() )
 		{
-			doGrow();
+			m_race->grow( *this );
 
 			if ( getHealth() <= 5 )
 			{
-				eat( engine, fishes, seaweeds, fishOrMate, seaweed );
+				eat( fishes, seaweeds, fishOrMate, seaweed );
 			}
 			else if ( canReproduce() )
 			{
-				ret = reproduce( engine, fishes, fishOrMate );
+				ret = reproduce( fishes, fishOrMate );
 			}
 		}
 
@@ -44,39 +44,39 @@ namespace aquarium
 	{
 		auto old = m_gender;
 		m_gender = Gender( 1 - m_gender );
-		onSwitchGender( sharedFromThis(), old );
+		onSwitchGender( *this, old );
 	}
 
-	void Fish::eat( std::default_random_engine & engine, FishArray const & fishes, SeaweedArray const & seaweeds, FishPtr & fish, SeaweedPtr & seaweed )
+	void Fish::eat( FishArray & fishes, SeaweedArray & seaweeds, Fish *& fish, Seaweed *& seaweed )
 	{
 		try
 		{
-			doEat( engine, fishes, seaweeds, fish, seaweed );
+			m_race->eat( *this, fishes, seaweeds, fish, seaweed );
 			heal( 5 );
 		}
 		catch ( NoFoodException & )
 		{
-			onNoFood( sharedFromThis() );
+			onNoFood( *this );
 		}
 	}
 
-	FishPtr Fish::reproduce( std::default_random_engine & engine, FishArray const & fishes, FishPtr & mate )
+	FishPtr Fish::reproduce( FishArray & fishes, Fish *& mate )
 	{
 		FishPtr child;
 
 		try
 		{
-			child = doReproduce( engine, fishes, mate );
+			child = m_race->reproduce( *this, fishes, mate );
 			hasReproduced();
 			mate->hasReproduced();
 		}
 		catch ( NoMateException & )
 		{
-			onNoMate( sharedFromThis() );
+			onNoMate( *this );
 		}
 		catch ( WrongMateException & exc )
 		{
-			onWrongMate( sharedFromThis(), exc.getMate() );
+			onWrongMate( *this, exc.getMate() );
 		}
 
 		return child;
@@ -84,26 +84,24 @@ namespace aquarium
 
 	void Fish::doDie()
 	{
-		onDie( sharedFromThis() );
+		onDie( *this );
 	}
 
 	std::ostream & operator<<( std::ostream & stream, Fish const & fish )
 	{
-		stream << aquarium::manip( fish.getRace() );
-		stream << "\t" << aquarium::manip( fish.getName() );
-		stream << "\t" << aquarium::manip( fish.getGender() );
+		stream << fish.getRace()->getRace();
+		stream << " [" << fish.getName() << "]";
+		stream << " " << fish.getGender();
 		stream << static_cast< Living const & >( fish );
 		return stream;
 	}
 
 	std::istream & operator>>( std::istream & stream, Fish & fish )
 	{
-		std::string genderName;
-		std::getline( stream, fish.m_name, '\t' );
-		fish.m_name = fish.m_name.substr( fish.m_name.find_first_not_of( " \t" ) );
-		fish.m_name = fish.m_name.substr( 0, fish.m_name.find_last_not_of( " \t" ) + 1 );
-		stream >> genderName;
-		fish.m_gender = getGender( genderName );
+		uint16_t gender{ 0 };
+		std::getline( stream, fish.m_name, ']' );
+		stream >> gender;
+		fish.m_gender = Gender( gender );
 		stream >> static_cast< Living & >( fish );
 		return stream;
 	}

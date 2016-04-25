@@ -35,36 +35,66 @@ namespace aquarium
 		RaceCount,
 	} FishRace;
 
-	template< FishRace Race > struct IsCarnivore : public std::false_type{};
-	template<> struct IsCarnivore< Basse > : public std::true_type{};
-	template<> struct IsCarnivore< Tuna > : public std::true_type{};
-	template<> struct IsCarnivore< Clown > : public std::true_type{};
+	typedef enum ConsumerType : uint16_t
+	{
+		Carnivore,
+		Herbivore,
+		ConsumerTypeCount,
+	} ConsumerType;
 
-	template< FishRace Race > struct IsHerbivore : public std::false_type{};
-	template<> struct IsHerbivore< Sole > : public std::true_type{};
-	template<> struct IsHerbivore< Bass > : public std::true_type{};
-	template<> struct IsHerbivore< Carp > : public std::true_type{};
+	template< FishRace RaceT > struct ConsumerTypeGetter;
 
-	template< FishRace Race > struct IsAgingHermaphrodite : public std::false_type{};
+	template<> struct ConsumerTypeGetter< Basse >
+	{
+		static ConsumerType const value = Carnivore;
+	};
+
+	template<> struct ConsumerTypeGetter< Tuna >
+	{
+		static ConsumerType const value = Carnivore;
+	};
+
+	template<> struct ConsumerTypeGetter< Clown >
+	{
+		static ConsumerType const value = Carnivore;
+	};
+
+	template<> struct ConsumerTypeGetter< Sole >
+	{
+		static ConsumerType const value = Herbivore;
+	};
+
+	template<> struct ConsumerTypeGetter< Bass >
+	{
+		static ConsumerType const value = Herbivore;
+	};
+
+	template<> struct ConsumerTypeGetter< Carp >
+	{
+		static ConsumerType const value = Herbivore;
+	};
+
+	template< FishRace RaceT > struct IsAgingHermaphrodite : public std::false_type{};
 	template<> struct IsAgingHermaphrodite< Bass > : public std::true_type{};
 	template<> struct IsAgingHermaphrodite< Basse > : public std::true_type{};
 
-	template< FishRace Race > struct IsOpportunisiticHermaphrodite : public std::false_type{};
+	template< FishRace RaceT > struct IsOpportunisiticHermaphrodite : public std::false_type{};
 	template<> struct IsOpportunisiticHermaphrodite< Sole > : public std::true_type{};
 	template<> struct IsOpportunisiticHermaphrodite< Clown > : public std::true_type{};
 
 	class Living;
 	class Seaweed;
+	class RaceBase;
 	class Fish;
-	template< FishRace Race >
-	class RacedFish;
+	template< FishRace RaceT >
+	class Race;
 	class Aquarium;
 
-	using FishPtr = std::shared_ptr< Fish >;
-	using SeaweedPtr = std::shared_ptr< Seaweed >;
-	using FishCreator = std::function< FishPtr( uint16_t, std::string const &, Gender ) >;
-	using FishArray = std::vector< FishPtr >;
-	using SeaweedArray = std::vector< SeaweedPtr >;
+	using FishPtr = std::unique_ptr< Fish >;
+	using SeaweedPtr = std::unique_ptr< Seaweed >;
+	using RacePtr = std::shared_ptr< RaceBase const >;
+	using FishArray = std::vector< Fish >;
+	using SeaweedArray = std::vector< Seaweed >;
 
 	class NoFoodException
 		: public std::exception
@@ -90,7 +120,7 @@ namespace aquarium
 		: public std::exception
 	{
 	public:
-		WrongMateException( FishPtr mate )
+		WrongMateException( Fish const & mate )
 			: m_mate{ mate }
 		{
 		}
@@ -100,13 +130,13 @@ namespace aquarium
 			return "Mate was not compatible";
 		}
 
-		inline FishPtr getMate()
+		inline Fish const & getMate()const
 		{
 			return m_mate;
 		}
 
 	private:
-		FishPtr m_mate;
+		Fish const & m_mate;
 	};
 
 	class NonCopyable
@@ -123,57 +153,14 @@ namespace aquarium
 
 	Gender getGender( std::string const & name );
 	FishRace getRace( std::string const & name );
-	std::string getRandomName( std::default_random_engine & engine );
-
-	struct NameManip
-	{
-		NameManip( std::string const & str );
-
-		std::string const & m_str;
-	};
-
-	struct GenderManip
-	{
-		GenderManip( Gender gender );
-
-		std::string const m_str;
-	};
-
-	struct RaceManip
-	{
-		RaceManip( FishRace race );
-
-		std::string const m_str;
-	};
+	std::string getRandomName();
 
 	template< typename T >
-	struct ManipCreator;
-
-	template<>
-	struct ManipCreator< std::string >
+	T getRandom( T const & min, T const & max )
 	{
-		using type = NameManip;
-	};
+		static std::random_device device;
+		static std::default_random_engine engine{ device() };
 
-	template<>
-	struct ManipCreator< Gender >
-	{
-		using type = GenderManip;
-	};
-
-	template<>
-	struct ManipCreator< FishRace >
-	{
-		using type = RaceManip;
-	};
-
-	template< typename T >
-	typename ManipCreator< T >::type manip( T const & value )
-	{
-		return typename ManipCreator< T >::type{ value };
+		return std::uniform_int_distribution< T >{ min, T( max - 1 ) }( engine );
 	}
-
-	std::ostream & operator<<( std::ostream & stream, NameManip const & manip );
-	std::ostream & operator<<( std::ostream & stream, GenderManip const & manip );
-	std::ostream & operator<<( std::ostream & stream, RaceManip const & manip );
 }

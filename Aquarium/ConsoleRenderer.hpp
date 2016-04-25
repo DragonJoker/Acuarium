@@ -1,8 +1,7 @@
 #include "Prerequisites.hpp"
 
 #include <AquariumRenderer.hpp>
-#include <Fish.hpp>
-#include <Seaweed.hpp>
+#include <FishRace.hpp>
 
 namespace aquarium
 {
@@ -62,57 +61,99 @@ namespace aquarium
 				std::cout << "****************************************\n";
 				std::cout << "Aquarium's content:\n";
 				std::cout << "****************************************\n\n";
-				std::cout << m_aquarium << std::endl;
+				std::cout << "Seaweeds: ";
+				std::cout << m_aquarium.getSeaweeds().size() << "\n";
+				uint16_t age{ 0 };
+				uint16_t health{ 0 };
+				uint32_t count{ 0 };
+
+				for ( auto const & seaweed : m_aquarium.getSeaweeds() )
+				{
+					if ( seaweed.getAge() != age && seaweed.getHealth() != health && count > 0 )
+					{
+						std::cout << "(" << count << ") Seaweed";
+						std::cout << " " << std::setw( 2 ) << std::left << age;
+						std::cout << " " << std::setw( 2 ) << std::left << health;
+						std::cout << "\n";
+						count = 0;
+					}
+
+					age = seaweed.getAge();
+					health = seaweed.getHealth();
+					++count;
+				}
+
+				if ( count > 0 )
+				{
+					std::cout << "(" << count << ") Seaweed";
+					std::cout << " " << std::setw( 2 ) << std::left << age;
+					std::cout << " " << std::setw( 2 ) << std::left << health;
+				}
+
+				std::cout << "Fishes: ";
+				std::cout << m_aquarium.getFishes().size() << "\n";
+
+				for ( auto const & fish : m_aquarium.getFishes() )
+				{
+					std::cout << manip( fish.getRace()->getRace() );
+					std::cout << "\t" << manip( fish.getName() );
+					std::cout << "\t" << manip( fish.getGender() );
+					std::cout << " " << std::setw( 2 ) << std::left << fish.getAge();
+					std::cout << " " << std::setw( 2 ) << std::left << fish.getHealth();
+					std::cout << "\n";
+				}
+
+				std::cout << std::endl;
 			}
 
-			virtual void doOnFishBorn( FishPtr fish, FishPtr lhs, FishPtr rhs )
+			virtual void doOnFishBorn( Fish const & fish, Fish const & lhs, Fish const & rhs )
 			{
-				std::cout << "[" << manip( fish->getName() ) << "] is born from the union of ";
-				std::cout << "[" << manip( lhs->getName() ) << "] and ";
-				std::cout << "[" << manip( rhs->getName() ) << "]" << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] is born from the union of ";
+				std::cout << "[" << manip( lhs.getName() ) << "] and ";
+				std::cout << "[" << manip( rhs.getName() ) << "]" << std::endl;
 			}
 
-			virtual void doOnFishDie( FishPtr fish )
+			virtual void doOnFishDie( Fish const & fish )
 			{
-				std::cout << "[" << aquarium::manip( fish->getName() ) << "] is dead. :'(" << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] is dead. :'(" << std::endl;
 			}
 
-			virtual void doOnFishEatFish( FishPtr fish, FishPtr prey )
+			virtual void doOnFishEatFish( Fish const & fish, Fish const & prey )
 			{
-				std::cout << "[" << manip( fish->getName() ) << "] is feeding on [" << manip( prey->getName() ) << "]." << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] is feeding on [" << manip( prey.getName() ) << "]." << std::endl;
 			}
 
-			virtual void doOnFishEatSeaweed( FishPtr fish, SeaweedPtr prey )
+			virtual void doOnFishEatSeaweed( Fish const & fish, Seaweed const & prey )
 			{
-				std::cout << "[" << manip( fish->getName() ) << "] is feeding on a seaweed." << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] is feeding on a seaweed." << std::endl;
 			}
 
-			void doOnFishNoFood( FishPtr fish )
+			void doOnFishNoFood( Fish const & fish )
 			{
-				std::cout << "[" << aquarium::manip( fish->getName() ) << "] is hungry, but no food." << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] is hungry, but no food." << std::endl;
 			}
 
-			void doOnFishNoMate( FishPtr fish )
+			void doOnFishNoMate( Fish const & fish )
 			{
-				std::cout << "[" << aquarium::manip( fish->getName() ) << "] tried to reproduce, but no mate." << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] tried to reproduce, but no mate." << std::endl;
 			}
 
-			void doOnFishWrongMate( FishPtr fish, FishPtr mate )
+			void doOnFishWrongMate( Fish const & fish, Fish const & mate )
 			{
-				std::cout << "[" << aquarium::manip( fish->getName() ) << "] tried to reproduce, but mate was not compatible" << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] tried to reproduce, but mate was not compatible" << std::endl;
 			}
 
-			virtual void doOnFishSwitchGender( FishPtr fish, Gender gender )
+			virtual void doOnFishSwitchGender( Fish const & fish, Gender gender )
 			{
-				std::cout << "[" << aquarium::manip( fish->getName() ) << "] switches gender from " << aquarium::manip( gender );
-				std::cout << " to " << aquarium::manip( fish->getGender() ) << "" << std::endl;
+				std::cout << "[" << manip( fish.getName() ) << "] switches gender from " << manip( gender );
+				std::cout << " to " << manip( fish.getGender() ) << "" << std::endl;
 			}
 
-			virtual void doOnSeaweedBorn( SeaweedPtr seaweed, SeaweedPtr parent )
+			virtual void doOnSeaweedBorn( Seaweed const & seaweed, Seaweed const & parent )
 			{
 			}
 
-			virtual void doOnSeaweedDie( SeaweedPtr seaweed )
+			virtual void doOnSeaweedDie( Seaweed const & seaweed )
 			{
 			}
 		};

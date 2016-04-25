@@ -1,4 +1,4 @@
-﻿#include "Seaweed.hpp"
+#include "Seaweed.hpp"
 
 namespace aquarium
 {
@@ -27,7 +27,7 @@ namespace aquarium
 
 	void Seaweed::doDie()
 	{
-		onDie( shared_from_this() );
+		onDie( *this );
 	}
 
 	SeaweedPtr Seaweed::doGrow()
@@ -37,8 +37,8 @@ namespace aquarium
 		if ( getHealth() >= 10 )
 		{
 			uint16_t const half( getHealth() / 2 );
-			child = std::make_shared< Seaweed >( 0u, half );
-			child->onBorn( child, shared_from_this() );
+			child = std::make_unique< Seaweed >( 0u, half );
+			child->onBorn( *child, *this );
 			damage( half );
 		}
 		else

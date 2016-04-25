@@ -8,9 +8,9 @@ namespace aquarium
 	{
 	public:
 		void nextTurn();
-		void update();
-		void addFish( FishPtr && fish );
-		void addSeaweed( SeaweedPtr && seaweed );
+		void updateLists();
+		void addFish( Fish && fish );
+		void addSeaweed( Seaweed && seaweed );
 
 		inline bool hasFishes() const
 		{
@@ -32,36 +32,27 @@ namespace aquarium
 			return m_seaweeds;
 		}
 
-		inline std::default_random_engine & getRandomEngine()
-		{
-			return m_engine;
-		}
-
 	private:
 		void doAddNewComers();
 		void doRemoveDead();
 
 	public:
-		mutable Signal< std::function< void( FishPtr fish, FishPtr lhs, FishPtr rhs ) > > onFishBorn;
-		mutable Signal< std::function< void( FishPtr fish ) > > onFishDie;
-		mutable Signal< std::function< void( FishPtr fish, FishPtr prey ) > > onFishEatFish;
-		mutable Signal< std::function< void( FishPtr fish, SeaweedPtr prey ) > > onFishEatSeaweed;
-		mutable Signal< std::function< void( FishPtr fish ) > > onFishNoFood;
-		mutable Signal< std::function< void( FishPtr fish ) > > onFishNoMate;
-		mutable Signal< std::function< void( FishPtr fish, FishPtr mate ) > > onFishWrongMate;
-		mutable Signal< std::function< void( FishPtr fish, Gender ) > > onFishSwitchGender;
-		mutable Signal< std::function< void( SeaweedPtr seaweed, SeaweedPtr parent ) > > onSeaweedBorn;
-		mutable Signal< std::function< void( SeaweedPtr seaweed ) > > onSeaweedDie;
+		mutable Signal< std::function< void( Fish const & fish, Fish const & lhs, Fish const & rhs ) > > onFishBorn;
+		mutable Signal< std::function< void( Fish const & fish ) > > onFishDie;
+		mutable Signal< std::function< void( Fish const & fish, Fish const & prey ) > > onFishEatFish;
+		mutable Signal< std::function< void( Fish const & fish, Seaweed const & prey ) > > onFishEatSeaweed;
+		mutable Signal< std::function< void( Fish const & fish ) > > onFishNoFood;
+		mutable Signal< std::function< void( Fish const & fish ) > > onFishNoMate;
+		mutable Signal< std::function< void( Fish const & fish, Fish const & mate ) > > onFishWrongMate;
+		mutable Signal< std::function< void( Fish const & fish, Gender ) > > onFishSwitchGender;
+		mutable Signal< std::function< void( Seaweed const & seaweed, Seaweed const & parent ) > > onSeaweedBorn;
+		mutable Signal< std::function< void( Seaweed const & seaweed ) > > onSeaweedDie;
 
 	private:
 		FishArray m_fishes;
 		FishArray m_newFishes;
 		SeaweedArray m_seaweeds;
 		SeaweedArray m_newSeaweeds;
-		std::random_device m_device;
-		std::default_random_engine m_engine{ m_device() };
-
-		friend std::istream & operator>>( std::istream & stream, Aquarium & aqua );
 	};
 
 	std::ostream & operator<<( std::ostream & stream, Aquarium const & aqua );

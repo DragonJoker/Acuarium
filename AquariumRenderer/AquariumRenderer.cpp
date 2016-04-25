@@ -43,70 +43,70 @@ namespace aquarium
 
 		void AquariumRenderer::initialise( Aquarium const & aqua )
 		{
-			m_connOnFishBorn = aqua.onFishBorn.connect( [this]( FishPtr fish, FishPtr lhs, FishPtr rhs )
+			m_connOnFishBorn = aqua.onFishBorn.connect( [this]( Fish const & fish, Fish const & lhs, Fish const & rhs )
 			{
 				doPushAction( [this, fish, lhs, rhs]()
 				{
 					doOnFishBorn( fish, lhs, rhs );
 				} );
 			} );
-			m_connOnFishDie = aqua.onFishDie.connect( [this]( FishPtr fish )
+			m_connOnFishDie = aqua.onFishDie.connect( [this]( Fish const & fish )
 			{
 				doPushAction( [this, fish]
 				{
 					doOnFishDie( fish );
 				} );
 			} );
-			m_connOnFishEatFish = aqua.onFishEatFish.connect( [this]( FishPtr fish, FishPtr prey )
+			m_connOnFishEatFish = aqua.onFishEatFish.connect( [this]( Fish const & fish, Fish const & prey )
 			{
 				doPushAction( [this, fish, prey]()
 				{
 					doOnFishEatFish( fish, prey );
 				} );
 			} );
-			m_connOnFishEatSeaweed = aqua.onFishEatSeaweed.connect( [this]( FishPtr fish, SeaweedPtr prey )
+			m_connOnFishEatSeaweed = aqua.onFishEatSeaweed.connect( [this]( Fish const & fish, Seaweed const & prey )
 			{
 				doPushAction( [this, fish, prey]()
 				{
 					doOnFishEatSeaweed( fish, prey );
 				} );
 			} );
-			m_connOnFishNoFood = aqua.onFishNoFood.connect( [this]( FishPtr fish )
+			m_connOnFishNoFood = aqua.onFishNoFood.connect( [this]( Fish const & fish )
 			{
 				doPushAction( [this, fish]
 				{
 					doOnFishNoFood( fish );
 				} );
 			} );
-			m_connOnFishNoMate = aqua.onFishNoMate.connect( [this]( FishPtr fish )
+			m_connOnFishNoMate = aqua.onFishNoMate.connect( [this]( Fish const & fish )
 			{
 				doPushAction( [this, fish]
 				{
 					doOnFishNoMate( fish );
 				} );
 			} );
-			m_connOnFishWrongMate = aqua.onFishWrongMate.connect( [this]( FishPtr fish, FishPtr mate )
+			m_connOnFishWrongMate = aqua.onFishWrongMate.connect( [this]( Fish const & fish, Fish const & mate )
 			{
 				doPushAction( [this, fish, mate]
 				{
 					doOnFishWrongMate( fish, mate );
 				} );
 			} );
-			m_connOnFishSwithGender = aqua.onFishSwitchGender.connect( [this]( FishPtr fish, Gender gender )
+			m_connOnFishSwithGender = aqua.onFishSwitchGender.connect( [this]( Fish const & fish, Gender gender )
 			{
 				doPushAction( [this, fish, gender]
 				{
 					doOnFishSwitchGender( fish, gender );
 				} );
 			} );
-			m_connOnSeaweedBorn = aqua.onSeaweedBorn.connect( [this]( SeaweedPtr seaweed, SeaweedPtr parent )
+			m_connOnSeaweedBorn = aqua.onSeaweedBorn.connect( [this]( Seaweed const & seaweed, Seaweed const & parent )
 			{
 				doPushAction( [this, seaweed, parent]()
 				{
 					doOnSeaweedBorn( seaweed, parent );
 				} );
 			} );
-			m_connOnSeaweedDie = aqua.onSeaweedDie.connect( [this]( SeaweedPtr seaweed )
+			m_connOnSeaweedDie = aqua.onSeaweedDie.connect( [this]( Seaweed const & seaweed )
 			{
 				doPushAction( [this, seaweed]()
 				{

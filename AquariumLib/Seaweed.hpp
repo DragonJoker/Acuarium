@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Living.hpp"
 
@@ -6,8 +6,6 @@ namespace aquarium
 {
 	class Seaweed
 		: public Living
-		, public std::enable_shared_from_this< Seaweed >
-		, private NonCopyable
 	{
 	public:
 		Seaweed( uint16_t age, uint16_t health = 10 );
@@ -17,8 +15,8 @@ namespace aquarium
 		void beEaten();
 
 	public:
-		Signal< std::function< void( SeaweedPtr seaweed ) > > onDie;
-		Signal< std::function< void( SeaweedPtr seaweed, SeaweedPtr parent ) > > onBorn;
+		Signal< std::function< void( Seaweed const & seaweed ) > > onDie;
+		Signal< std::function< void( Seaweed const & seaweed, Seaweed const & parent ) > > onBorn;
 
 	private:
 		virtual void doDie();

@@ -1,7 +1,8 @@
 #include "Prerequisites.hpp"
 
-#include <FishFactory.hpp>
+#include <RaceFactory.hpp>
 #include <Seaweed.hpp>
+#include <Fish.hpp>
 
 namespace
 {
@@ -26,13 +27,13 @@ namespace
   
     for ( uint16_t i{ 0u }; i < count; ++i )
     {
-      adds->second.m_seaweeds.emplace_back( std::make_shared< aquarium::Seaweed >( age ) );
+      adds->second.m_seaweeds.emplace_back( age );
     }
   }
 
   void addFish( std::sregex_iterator it, TurnAddsMap::iterator adds )
   {
-    aquarium::FishFactory factory;
+    aquarium::RaceFactory factory;
     std::smatch match{ *it };
     std::string name{ match[1] };
     std::string race{ match[2] };
@@ -40,7 +41,7 @@ namespace
     std::stringstream sage{ match[4] };
     uint16_t age{ 0u };
     sage >> age;
-    adds->second.m_fishes.emplace_back( factory.createFish( aquarium::getRace( race ), age, name, aquarium::getGender( gender ) ) );
+    adds->second.m_fishes.emplace_back( factory.getRace( aquarium::getRace( race ) ), age, name, aquarium::getGender( gender ) );
   }
 }
 

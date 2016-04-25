@@ -1,8 +1,8 @@
-﻿#include "Aquarium.hpp"
+#include "Aquarium.hpp"
 
 #include "Seaweed.hpp"
 #include "Fish.hpp"
-#include "FishFactory.hpp"
+#include "RaceFactory.hpp"
 
 namespace aquarium
 {
@@ -14,32 +14,32 @@ namespace aquarium
 
 			for ( auto & seaweed : m_seaweeds )
 			{
-				auto child = seaweed->grow();
+				auto child = seaweed.grow();
 
 				if ( child )
 				{
-					m_newSeaweeds.emplace_back( std::move( child ) );
+					addSeaweed( std::move( *child ) );
 				}
 			}
 
 			for ( auto & current : m_fishes )
 			{
-				FishPtr fish;
-				SeaweedPtr seaweed;
-				auto child = current->grow( m_engine, m_fishes, m_seaweeds, fish, seaweed );
+				Fish * fish{ nullptr };
+				Seaweed * seaweed{ nullptr };
+				auto child = current.grow( m_fishes, m_seaweeds, fish, seaweed );
 
 				if ( child )
 				{
-					onFishBorn( child, current, fish );
-					m_newFishes.emplace_back( std::move( child ) );
+					onFishBorn( *child, current, *fish );
+					addFish( std::move( *child ) );
 				}
 				else if ( fish )
 				{
-					onFishEatFish( current, fish );
+					onFishEatFish( current, *fish );
 				}
 				else if ( seaweed )
 				{
-					onFishEatSeaweed( current, seaweed );
+					onFishEatSeaweed( current, *seaweed );
 				}
 
 			}
@@ -50,7 +50,7 @@ namespace aquarium
 		}
 	}
 
-	void Aquarium::update()
+	void Aquarium::updateLists()
 	{
 		try
 		{
@@ -63,17 +63,17 @@ namespace aquarium
 		}
 	}
 
-	void Aquarium::addFish( FishPtr && fish )
+	void Aquarium::addFish( Fish && fish )
 	{
-		fish->onDie.connect( [this]( FishPtr fish ) { onFishDie( fish ); } );
-		fish->onNoFood.connect( [this]( FishPtr fish ) { onFishNoFood( fish ); } );
-		fish->onNoMate.connect( [this]( FishPtr fish ) { onFishNoMate( fish ); } );
-		fish->onWrongMate.connect( [this]( FishPtr fish, FishPtr mate ) { onFishWrongMate( fish, mate ); } );
-		fish->onSwitchGender.connect( [this]( FishPtr fish, Gender gender ) { onFishSwitchGender( fish, gender ); } );
+		fish.onDie.connect( [this]( Fish const & fish ) { onFishDie( fish ); } );
+		fish.onNoFood.connect( [this]( Fish const & fish ) { onFishNoFood( fish ); } );
+		fish.onNoMate.connect( [this]( Fish const & fish ) { onFishNoMate( fish ); } );
+		fish.onWrongMate.connect( [this]( Fish const & fish, Fish const & mate ) { onFishWrongMate( fish, mate ); } );
+		fish.onSwitchGender.connect( [this]( Fish const & fish, Gender gender ) { onFishSwitchGender( fish, gender ); } );
 		m_newFishes.emplace_back( std::move( fish ) );
 	}
 
-	void Aquarium::addSeaweed( SeaweedPtr && seaweed )
+	void Aquarium::addSeaweed( Seaweed && seaweed )
 	{
 		m_newSeaweeds.emplace_back( std::move( seaweed ) );
 	}
@@ -96,35 +96,37 @@ namespace aquarium
 
 		for ( auto & fish : m_fishes )
 		{
-			fish->resetReproduced();
+			fish.resetReproduced();
 		}
 
-		std::sort( std::begin( m_seaweeds ), std::end( m_seaweeds ), []( SeaweedPtr const & lhs, SeaweedPtr const & rhs )
+		std::sort( std::begin( m_seaweeds ), std::end( m_seaweeds ), []( Seaweed const & lhs, Seaweed const & rhs )
 		{
-			return lhs->getAge() < rhs->getAge()
-				|| ( lhs->getAge() == rhs->getAge() && lhs->getHealth() < rhs->getHealth() );
+			return lhs.getAge() < rhs.getAge()
+				|| ( lhs.getAge() == rhs.getAge()
+					 && lhs.getHealth() < rhs.getHealth() );
 		} );
 
-		std::sort( std::begin( m_fishes ), std::end( m_fishes ), []( FishPtr const & lhs, FishPtr const & rhs )
+		std::sort( std::begin( m_fishes ), std::end( m_fishes ), []( Fish const & lhs, Fish const & rhs )
 		{
-			return lhs->getRace() < rhs->getRace()
-				|| ( lhs->getRace() == rhs->getRace()
-					 && ( lhs->getAge() < rhs->getAge()
-						  || ( lhs->getAge() == rhs->getAge() && lhs->getHealth() < rhs->getHealth() ) ) );
+			return lhs.getRace() < rhs.getRace()
+				|| ( lhs.getRace() == rhs.getRace()
+					 && ( lhs.getAge() < rhs.getAge()
+						  || ( lhs.getAge() == rhs.getAge()
+							   && lhs.getHealth() < rhs.getHealth() ) ) );
 		} );
 	}
 
 	void Aquarium::doRemoveDead()
 	{
-		auto deadsw = std::remove_if( m_seaweeds.begin(), m_seaweeds.end(), []( SeaweedPtr const & seaweed )
+		auto deadsw = std::remove_if( m_seaweeds.begin(), m_seaweeds.end(), []( Seaweed const & seaweed )
 		{
-			return !seaweed->isAlive();
+			return !seaweed.isAlive();
 		} );
 		m_seaweeds.erase( deadsw, m_seaweeds.end() );
 
-		auto deadf = std::remove_if( m_fishes.begin(), m_fishes.end(), []( FishPtr const & fish )
+		auto deadf = std::remove_if( m_fishes.begin(), m_fishes.end(), []( Fish const & fish )
 		{
-			return !fish->isAlive();
+			return !fish.isAlive();
 		} );
 		m_fishes.erase( deadf, m_fishes.end() );
 	}
@@ -139,20 +141,20 @@ namespace aquarium
 
 		for ( auto const & seaweed : aqua.getSeaweeds() )
 		{
-			if ( seaweed->getAge() != age && seaweed->getHealth() != health && count > 0 )
+			if ( seaweed.getAge() != age && seaweed.getHealth() != health && count > 0 )
 			{
-				stream << "(" << std::setw( 3 ) << std::left << count << ") " << Seaweed{ age, health } << "\n";
+				stream << "(" << count << ") " << Seaweed{ age, health } << "\n";
 				count = 0;
 			}
 
-			age = seaweed->getAge();
-			health = seaweed->getHealth();
+			age = seaweed.getAge();
+			health = seaweed.getHealth();
 			++count;
 		}
 
 		if ( count > 0 )
 		{
-			stream << "(" << std::setw( 3 ) << std::left << count << ") " << Seaweed{ age, health } << "\n";
+			stream << "(" << count << ") " << Seaweed{ age, health } << "\n";
 		}
 
 		stream << "Fishes: ";
@@ -160,7 +162,7 @@ namespace aquarium
 
 		for ( auto const & fish : aqua.getFishes() )
 		{
-			stream << *fish << "\n";
+			stream << fish << "\n";
 		}
 
 		return stream;
@@ -189,7 +191,7 @@ namespace aquarium
 
 			for ( auto j = 0u; j < swcount; ++j )
 			{
-				aqua.m_seaweeds.emplace_back( std::make_shared< Seaweed >( seaweed.getAge(), seaweed.getHealth() ) );
+				aqua.addSeaweed( { seaweed.getAge(), seaweed.getHealth() } );
 			}
 
 			i += swcount;
@@ -198,17 +200,17 @@ namespace aquarium
 		stream >> sdump; //Fishes: 
 		stream >> count;
 		stream.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
-		FishFactory factory;
+		RaceFactory factory;
 
 		for ( size_t i{ 0 }; i < count; ++i )
 		{
 			std::string raceName;
 			stream >> raceName;
-			stream.ignore( std::numeric_limits< std::streamsize >::max(), '\t' );
-			FishPtr fish = factory.createFish( getRace( raceName ), 0, std::string{}, Male );
-			stream >> *fish;
+			stream.ignore( std::numeric_limits< std::streamsize >::max(), '[' );
+			Fish fish{ factory.getRace( getRace( raceName ) ), 0, std::string{}, Male };
+			stream >> fish;
 			stream.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
-			aqua.m_fishes.emplace_back( std::move( fish ) );
+			aqua.addFish( std::move( fish ) );
 		}
 
 		return stream;

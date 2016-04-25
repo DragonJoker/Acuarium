@@ -63,8 +63,8 @@ namespace aquarium
 
 	std::ostream & operator<<( std::ostream & stream, Living const & living )
 	{
-		stream << " " << std::setw( 2 ) << std::left << living.getAge();
-		stream << " " << std::setw( 2 ) << std::left << living.getHealth();
+		stream << " " << living.getAge();
+		stream << " " << living.getHealth();
 		return stream;
 	}
 
