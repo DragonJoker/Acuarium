@@ -7,49 +7,50 @@
 
 int main( int argc, char * argv[] )
 {
-  aquarium::Aquarium aqua;
-  uint32_t turn{ 0 };
-  TurnAddsMap turns;
+	aquarium::Aquarium aqua;
+	uint32_t turn{ 0 };
+	TurnAddsMap turns;
+	
+	if ( argc > 1 )
+	{
+		loadFromFile( argv[1], turns );
+	}
+	else
+	{
+		//manualFillAquarium( turns );
+		autoFillAquarium( turns );
+	}
 
-  if ( argc > 1 )
-  {
-    loadFromFile( argv[1], turns );
-  }
-  else
-  {
-    //manualFillAquarium( turns );
-    autoFillAquarium( turns );
-  }
+	int ret = -1;
 
-  updateAquarium( aqua, turns, turn );
+	if ( glfwInit() )
+	{
+		GLFWwindow * window = glfwCreateWindow( 800, 600, "Acuarium++", nullptr, nullptr );
 
-  int ret = -1;
+		if ( window )
+		{
+			glfwMakeContextCurrent( window );
+			aquarium::render::GlAquariumRenderer renderer{ aqua };
+			updateAquarium( aqua, turns, turn );
+			renderer.render( turn );
 
-  if ( glfwInit() )
-  {
-    GLFWwindow * window = glfwCreateWindow( 800, 600, "Acuarium++", nullptr, nullptr );
-    
-    if ( window )
-    {
-      glfwMakeContextCurrent( window );
-      render::AquariumRenderer renderer{ aqua };
+			while ( !glfwWindowShouldClose( window ) && aqua.hasFishes() || aqua.hasSeaweeds() )
+			{
+				{
+					auto lock = make_unique_lock( renderer );
+					aqua.nextTurn();
+					updateAquarium( aqua, turns, ++turn );
+				}
+				renderer.render( turn );
+				glfwSwapBuffers( window );
+				glfwPollEvents();
+			}
 
-      while ( !glfwWindowShouldClose(window) && aqua.hasFishes() || aqua.hasSeaweeds() )
-      {
-        aqua.nextTurn();
-        updateAquarium( aqua, turns, turn );
+			ret = 0;
+		}
+		
+		glfwTerminate();
+	}
 
-        renderer.render();
-
-        glfwSwapBuffers( window );
-        glfwPollEvents();
-      }
-
-      ret = 0;
-    }
-
-    glfwTerminate();
-  }
-
-  return ret;
+	return ret;
 }

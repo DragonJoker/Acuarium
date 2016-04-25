@@ -1,16 +1,27 @@
 #include "SeaweedRenderer.hpp"
 
-namespace render
+namespace aquarium
 {
-  SeaweedRenderer::SeaweedRenderer()
-  {
-  }
+	namespace render
+	{
+		GlSeaweedRenderer::GlSeaweedRenderer()
+		{
+		}
 
-  SeaweedRenderer::~SeaweedRenderer ()
-  {
-  }
+		GlSeaweedRenderer::~GlSeaweedRenderer ()
+		{
+		}
 
-  void SeaweedRenderer::render( aquarium::Seaweed const & fish, Point const & position )
-  {
-  }
+		void GlSeaweedRenderer::doRender( Seaweed const & seaweed )
+		{
+		}
+
+		void GlSeaweedRenderer::renderBorn( Seaweed const & seaweed, Seaweed const & parent )
+		{
+		}
+
+		void GlSeaweedRenderer::renderDie( Seaweed const & seaweed )
+		{
+		}
+	}
 }

@@ -1,16 +1,51 @@
 #include "FishRenderer.hpp"
 
-namespace render
+namespace aquarium
 {
-  FishRenderer::FishRenderer()
-  {
-  }
+	namespace render
+	{
+		GlFishRenderer::GlFishRenderer()
+		{
+		}
 
-  FishRenderer::~FishRenderer ()
-  {
-  }
+		GlFishRenderer::~GlFishRenderer ()
+		{
+		}
 
-  void FishRenderer::render( aquarium::Fish const & fish, Point const & position )
-  {
-  }
+		void GlFishRenderer::doRender( Fish const & fish )
+		{
+		}
+
+		void GlFishRenderer::renderBorn( Fish const & fish, Fish const & lhs, Fish const & rhs )
+		{
+		}
+
+		void GlFishRenderer::renderDie( Fish const & fish )
+		{
+		}
+
+		void GlFishRenderer::renderEat( Fish const & fish, Fish const & prey )
+		{
+		}
+
+		void GlFishRenderer::renderEat( Fish const & fish, Seaweed const & prey )
+		{
+		}
+
+		void GlFishRenderer::renderNoFood( Fish const & fish )
+		{
+		}
+
+		void GlFishRenderer::renderNoMate( Fish const & fish )
+		{
+		}
+
+		void GlFishRenderer::renderWrongMate( Fish const & fish, Fish const & mate )
+		{
+		}
+
+		void GlFishRenderer::renderSwitchGender( Fish const & fish, Gender gender )
+		{
+		}
+	}
 }

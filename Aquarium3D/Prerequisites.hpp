@@ -1,13 +1,15 @@
 #pragma once
 
-#include <Prerequisites.hpp>
+#include <AquariumRendererPrerequisites.hpp>
+#include <FishRace.hpp>
 
 #include <fstream>
+#include <glm/glm.hpp>
 
 struct TurnAdds
 {
-  aquarium::FishArray m_fishes;
-  aquarium::SeaweedArray m_seaweeds;
+	aquarium::FishArray m_fishes;
+	aquarium::SeaweedArray m_seaweeds;
 };
 
 using TurnAddsMap = std::map< uint32_t, TurnAdds >;
@@ -18,21 +20,20 @@ void loadFromFile( std::string const & filename, TurnAddsMap & turns );
 void updateAquarium( aquarium::Aquarium & aqua, TurnAddsMap & turnsAdds, uint32_t turn );
 void saveAquarium( std::string const & filename, aquarium::Aquarium const & aqua );
 
-namespace render
+namespace aquarium
 {
-  class AquariumRenderer;
-  class FishRenderer;
-  class SeaweedRenderer;
+	namespace render
+	{
+		class GlAquariumRenderer;
+		class GlFishRenderer;
+		class GlSeaweedRenderer;
 
-  struct Point
-  {
-    float x;
-    float y;
-    float z;
-  };
+		using GlFishRendererPtr = std::unique_ptr< GlFishRenderer >;
+		using GlSeaweedRendererPtr = std::unique_ptr< GlSeaweedRenderer >;
 
-  using PlacedSeaweed = std::pair< aquarium::SeaweedPtr, Point >;
-  using PlacedFish = std::pair< aquarium::FishPtr, Point >;
-  using SeaweedArray = std::vector< PlacedSeaweed >;
-  using FishArray = std::vector< PlacedFish >;
+		using PlacedSeaweed = std::pair< aquarium::SeaweedPtr, glm::vec3 >;
+		using PlacedFish = std::pair< aquarium::FishPtr, glm::vec3 >;
+		using SeaweedArray = std::vector< PlacedSeaweed >;
+		using FishArray = std::vector< PlacedFish >;
+	}
 }

@@ -2,14 +2,24 @@
 
 #include "Prerequisites.hpp"
 
-namespace render
-{
-  class SeaweedRenderer
-  {
-  public:
-    SeaweedRenderer();
-    ~SeaweedRenderer();
+#include <SeaweedRenderer.hpp>
 
-    void render( aquarium::Seaweed const & seaweed, Point const & position );
-  };
+namespace aquarium
+{
+	namespace render
+	{
+		class GlSeaweedRenderer
+			: public SeaweedRenderer
+		{
+		public:
+			GlSeaweedRenderer();
+			~GlSeaweedRenderer();
+
+			void renderBorn( Seaweed const & seaweed, Seaweed const & parent );
+			void renderDie( Seaweed const & fish );
+
+		private:
+			virtual void doRender( Seaweed const & seaweed );
+		};
+	}
 }

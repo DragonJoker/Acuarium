@@ -8,56 +8,77 @@
 
 #include <gl/GL.h>
 
-namespace render
+namespace aquarium
 {
-  namespace
-  {
-    template< typename LivingT >
-    using LivingTPtr = std::shared_ptr< LivingT >;
-    template< typename LivingT >
-    using  LivingTArray = std::vector< LivingTPtr< LivingT > >;
-    template< typename LivingT >
-    using  PlacedLivingT = std::pair< LivingTPtr< LivingT >, Point >;
-    template< typename LivingT >
-    using  PlacedLivingTArray = std::vector< PlacedLivingT< LivingT > >;
+	namespace render
+	{
+		GlAquariumRenderer::GlAquariumRenderer( aquarium::Aquarium const & aqua )
+			: AquariumRenderer{ aqua, std::make_unique< GlFishRenderer >(), std::make_unique< GlSeaweedRenderer >() }
+			, m_glFishRenderer{ static_cast< GlFishRenderer & >( *m_fishRenderer ) }
+			, m_glSeaweedRenderer{ static_cast< GlSeaweedRenderer & >( *m_seaweedRenderer ) }
+		{
+		}
+		
+		GlAquariumRenderer::~GlAquariumRenderer()
+		{
+		}
 
-    template< typename LivingT >
-    void doUpdatePlaced( LivingTArray< LivingT > const & livings, PlacedLivingTArray< LivingT > & placedLivings )
-    {
-      std::vector< typename PlacedLivingTArray< LivingT >::iterator > toRemove;
-      std::vector< typename PlacedLivingTArray< LivingT > > toAdd;
+		void GlAquariumRenderer::doPreRender( uint32_t turn )
+		{
+		}
 
+		void GlAquariumRenderer::doRender( uint32_t turn )
+		{
+		}
 
-    }
-  }
+		void GlAquariumRenderer::doOnFishBorn( Fish const & fish, Fish const & lhs, Fish const & rhs )
+		{
+			m_glFishRenderer.renderBorn( fish, lhs, rhs );
+		}
 
-  AquariumRenderer::AquariumRenderer( aquarium::Aquarium const & aqua )
-    : m_aquarium{ aqua }
-  {
-  }
+		void GlAquariumRenderer::doOnFishDie( Fish const & fish )
+		{
+			m_glFishRenderer.renderDie( fish );
+		}
 
-  AquariumRenderer::~AquariumRenderer()
-  {
-  }
+		void GlAquariumRenderer::doOnFishEatFish( Fish const & fish, Fish const & prey )
+		{
+			m_glFishRenderer.renderEat( fish, prey );
+		}
 
-  void AquariumRenderer::render()
-  {
-    doUpdate();
+		void GlAquariumRenderer::doOnFishEatSeaweed( Fish const & fish, Seaweed const & prey )
+		{
+			m_glFishRenderer.renderEat( fish, prey );
+		}
 
-    for ( auto seaweed : m_seaweeds )
-    {
-      m_seaweedRenderer.render( *seaweed.first, seaweed.second );
-    }
+		void GlAquariumRenderer::doOnFishNoFood( Fish const & fish )
+		{
+			m_glFishRenderer.renderNoFood( fish );
+		}
 
-    for ( auto fish : m_fishes )
-    {
-      m_fishRenderer.render( *fish.first, fish.second );
-    }
-  }
+		void GlAquariumRenderer::doOnFishNoMate( Fish const & fish )
+		{
+			m_glFishRenderer.renderNoMate( fish );
+		}
 
-  void AquariumRenderer::doUpdate()
-  {
-    doUpdatePlaced( m_aquarium.getFishes(), m_fishes );
-    doUpdatePlaced( m_aquarium.getSeaweeds(), m_seaweeds );
-  }
+		void GlAquariumRenderer::doOnFishWrongMate( Fish const & fish, Fish const & mate )
+		{
+			m_glFishRenderer.renderWrongMate( fish, mate );
+		}
+
+		void GlAquariumRenderer::doOnFishSwitchGender( Fish const & fish, Gender gender )
+		{
+			m_glFishRenderer.renderSwitchGender( fish, gender );
+		}
+
+		void GlAquariumRenderer::doOnSeaweedBorn( Seaweed const & seaweed, Seaweed const & parent )
+		{
+			m_glSeaweedRenderer.renderBorn( seaweed, parent );
+		}
+
+		void GlAquariumRenderer::doOnSeaweedDie( Seaweed const & seaweed )
+		{
+			m_glSeaweedRenderer.renderDie( seaweed );
+		}
+	}
 }
