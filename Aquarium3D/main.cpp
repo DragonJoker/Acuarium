@@ -4,12 +4,12 @@
 #include <GLFW/glfw3.h>
 
 #include "AquariumRenderer.hpp"
+#include "ConsoleRenderer.hpp"
 
 int main( int argc, char * argv[] )
 {
 	aquarium::Aquarium aqua;
-	uint32_t turn{ 0 };
-	TurnAddsMap turns;
+	aquarium::TurnAddsMap turns;
 	
 	if ( argc > 1 )
 	{
@@ -31,17 +31,19 @@ int main( int argc, char * argv[] )
 		{
 			glfwMakeContextCurrent( window );
 			aquarium::render::GlAquariumRenderer renderer{ aqua };
-			updateAquarium( aqua, turns, turn );
-			renderer.render( turn );
+			aquarium::render::ConsoleAquariumRenderer console{ aqua };
+			aquarium::AquariumGame game{ aqua, turns };
+			console.render( game.getTurn() );
+			renderer.render( game.getTurn() );
 
 			while ( !glfwWindowShouldClose( window ) && aqua.hasFishes() || aqua.hasSeaweeds() )
 			{
 				{
 					auto lock = make_unique_lock( renderer );
-					aqua.nextTurn();
-					updateAquarium( aqua, turns, ++turn );
+					game.update();
 				}
-				renderer.render( turn );
+				console.render( game.getTurn() );
+				renderer.render( game.getTurn() );
 				glfwSwapBuffers( window );
 				glfwPollEvents();
 			}

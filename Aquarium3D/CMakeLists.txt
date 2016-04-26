@@ -11,6 +11,7 @@ if ( OPENGL_FOUND AND GLFW_FOUND AND GLM_FOUND )
   include_directories(
     ${CMAKE_SOURCE_DIR}/AquariumLib
     ${CMAKE_SOURCE_DIR}/AquariumRenderer
+    ${CMAKE_SOURCE_DIR}/AquariumAppsCommon
     ${${OPENGL_gl_LIBRARY}}
     ${GLFW_INCLUDE_DIRS}
     ${GLM_INCLUDE_DIR}
@@ -20,6 +21,7 @@ if ( OPENGL_FOUND AND GLFW_FOUND AND GLM_FOUND )
   target_link_libraries( ${PROJECT_NAME}
     AquariumLib
     AquariumRenderer
+    AquariumAppsCommon
     ${OPENGL_gl_LIBRARY}
     ${GLFW_LIBRARIES}
   )
