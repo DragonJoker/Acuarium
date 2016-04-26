@@ -33,12 +33,7 @@ namespace aquarium
 
 		inline bool canReproduce() const
 		{
-			return !m_reproduced;
-		}
-
-		inline void resetReproduced()
-		{
-			m_reproduced = false;
+			return m_reproduced == 0;
 		}
 
 	protected:
@@ -50,7 +45,7 @@ namespace aquarium
 
 		inline void hasReproduced()
 		{
-			m_reproduced = true;
+			m_reproduced = 1;
 		}
 
 	public:
@@ -64,7 +59,7 @@ namespace aquarium
 		RacePtr m_race;
 		std::string m_name;
 		Gender m_gender;
-		bool m_reproduced{ false };
+		uint8_t m_reproduced{ 0u };
 
 		friend std::istream & operator>>( std::istream & stream, Fish & fish );
 	};

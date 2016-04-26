@@ -5,8 +5,7 @@
 int main( int argc, char * argv[] )
 {
 	aquarium::Aquarium aqua;
-	uint32_t turn{ 0 };
-	TurnAddsMap turns;
+	aquarium::TurnAddsMap turns;
 
 	if ( argc > 1 )
 	{
@@ -20,17 +19,16 @@ int main( int argc, char * argv[] )
 
 	{
 		aquarium::render::ConsoleAquariumRenderer renderer{ aqua };
-		updateAquarium( aqua, turns, turn );
-		renderer.render( turn );
+		aquarium::AquariumGame game{ aqua, turns };
+		renderer.render( game.getTurn() );
 
 		while ( aqua.hasFishes() || aqua.hasSeaweeds() )
 		{
 			{
 				auto lock = make_unique_lock( renderer );
-				aqua.nextTurn();
-				updateAquarium( aqua, turns, ++turn );
+				game.update();
 			}
-			renderer.render( turn );
+			renderer.render( game.getTurn() );
 			//saveAquarium( "aqua.poisson", aqua );
 			std::cin.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
 		}

@@ -6,20 +6,20 @@ namespace aquarium
 {
 	class Aquarium
 	{
+		friend class AquariumGame;
+
 	public:
-		void nextTurn();
-		void updateLists();
 		void addFish( Fish && fish );
 		void addSeaweed( Seaweed && seaweed );
 
 		inline bool hasFishes() const
 		{
-			return !m_fishes.empty() || !m_newFishes.empty();
+			return !m_fishes.empty();
 		}
 
 		inline bool hasSeaweeds() const
 		{
-			return !m_seaweeds.empty() || !m_newSeaweeds.empty();
+			return !m_seaweeds.empty();
 		}
 
 		inline FishArray const & getFishes() const
@@ -31,10 +31,6 @@ namespace aquarium
 		{
 			return m_seaweeds;
 		}
-
-	private:
-		void doAddNewComers();
-		void doRemoveDead();
 
 	public:
 		mutable Signal< std::function< void( Fish const & fish, Fish const & lhs, Fish const & rhs ) > > onFishBorn;
@@ -50,9 +46,7 @@ namespace aquarium
 
 	private:
 		FishArray m_fishes;
-		FishArray m_newFishes;
 		SeaweedArray m_seaweeds;
-		SeaweedArray m_newSeaweeds;
 	};
 
 	std::ostream & operator<<( std::ostream & stream, Aquarium const & aqua );

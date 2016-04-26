@@ -89,6 +89,7 @@ namespace aquarium
 	template< FishRace RaceT >
 	class Race;
 	class Aquarium;
+	class AquariumGame;
 
 	using FishPtr = std::unique_ptr< Fish >;
 	using SeaweedPtr = std::unique_ptr< Seaweed >;

@@ -66,8 +66,26 @@ namespace aquarium
 				uint16_t age{ 0 };
 				uint16_t health{ 0 };
 				uint32_t count{ 0 };
+				auto seaweeds = m_aquarium.getSeaweeds();
+				auto fishes = m_aquarium.getFishes();
 
-				for ( auto const & seaweed : m_aquarium.getSeaweeds() )
+				std::sort( std::begin( seaweeds ), std::end( seaweeds ), []( Seaweed const & lhs, Seaweed const & rhs )
+				{
+					return lhs.getAge() < rhs.getAge()
+						|| ( lhs.getAge() == rhs.getAge()
+							 && lhs.getHealth() < rhs.getHealth() );
+				} );
+
+				std::sort( std::begin( fishes ), std::end( fishes ), []( Fish const & lhs, Fish const & rhs )
+				{
+					return lhs.getRace() < rhs.getRace()
+						|| ( lhs.getRace() == rhs.getRace()
+							 && ( lhs.getAge() < rhs.getAge()
+								  || ( lhs.getAge() == rhs.getAge()
+									   && lhs.getHealth() < rhs.getHealth() ) ) );
+				} );
+
+				for ( auto const & seaweed : seaweeds )
 				{
 					if ( seaweed.getAge() != age && seaweed.getHealth() != health && count > 0 )
 					{
@@ -93,7 +111,7 @@ namespace aquarium
 				std::cout << "Fishes: ";
 				std::cout << m_aquarium.getFishes().size() << "\n";
 
-				for ( auto const & fish : m_aquarium.getFishes() )
+				for ( auto const & fish : fishes )
 				{
 					std::cout << manip( fish.getRace()->getRace() );
 					std::cout << "\t" << manip( fish.getName() );

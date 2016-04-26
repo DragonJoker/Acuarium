@@ -27,6 +27,11 @@ namespace aquarium
 		{
 			m_race->grow( *this );
 
+			if ( m_reproduced )
+			{
+				m_reproduced--;
+			}
+
 			if ( getHealth() <= 5 )
 			{
 				eat( fishes, seaweeds, fishOrMate, seaweed );

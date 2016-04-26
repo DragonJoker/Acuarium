@@ -6,16 +6,16 @@
 
 namespace
 {
-  TurnAddsMap::iterator addTurn( std::sregex_iterator it, TurnAddsMap & turnsAdds )
+  aquarium::TurnAddsMap::iterator addTurn( std::sregex_iterator it, aquarium::TurnAddsMap & turnsAdds )
   {
     std::smatch match{ *it };
     std::stringstream sturn{ match[1] };
     uint32_t turn{ 0 };
     sturn >> turn;
-    return turnsAdds.insert( { turn, TurnAdds{} } ).first;
+    return turnsAdds.insert( { turn, aquarium::TurnAdds{} } ).first;
   }
 
-  void addSeaweeds( std::sregex_iterator it, TurnAddsMap::iterator adds )
+  void addSeaweeds( std::sregex_iterator it, aquarium::TurnAddsMap::iterator adds )
   {
     std::smatch match{ *it };
     std::stringstream scount{ match[1] };
@@ -31,7 +31,7 @@ namespace
     }
   }
 
-  void addFish( std::sregex_iterator it, TurnAddsMap::iterator adds )
+  void addFish( std::sregex_iterator it, aquarium::TurnAddsMap::iterator adds )
   {
     aquarium::RaceFactory factory;
     std::smatch match{ *it };
@@ -45,7 +45,7 @@ namespace
   }
 }
 
-void loadFromFile( std::string const & filename, TurnAddsMap & turnsAdds )
+void loadFromFile( std::string const & filename, aquarium::TurnAddsMap & turnsAdds )
 {
   std::ifstream file( filename );
 
@@ -56,7 +56,7 @@ void loadFromFile( std::string const & filename, TurnAddsMap & turnsAdds )
     std::regex const fishExpr{ "([^,]+), (Basse|Tuna|Clown|Sole|Bass|Carp|Mérou|Thon|Poisson-clown|Bar|Carpe), (Male|Female|Mâle|Femelle), ([0-9]+) ans" };
     std::regex const turnExpr{ "===== tour ([^,]+) =====" };
     std::sregex_iterator endIt;
-    auto adds = turnsAdds.insert( { 0u, TurnAdds{} } ).first;
+    auto adds = turnsAdds.insert( { 0u, aquarium::TurnAdds{} } ).first;
 
     while ( std::getline( file, line ) && file )
     {
