@@ -1,4 +1,4 @@
-#include "Prerequisites.hpp"
+#include <AquariumAppsPrerequisites.hpp>
 
 #include "ConsoleRenderer.hpp"
 

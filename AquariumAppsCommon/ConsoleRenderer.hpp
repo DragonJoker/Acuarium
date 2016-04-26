@@ -1,4 +1,6 @@
-#include "Prerequisites.hpp"
+#include "AquariumAppsPrerequisites.hpp"
+
+#include "StreamManip.hpp"
 
 #include <AquariumRenderer.hpp>
 #include <FishRace.hpp>

@@ -2,6 +2,10 @@ cmake_minimum_required( VERSION 3.0 )
 
 project( Acuarium++ )
 
+set( CMAKE_MODULE_PATH
+	${CMAKE_SOURCE_DIR}/CMake
+)
+
 set( PROJECTS_PLATFORM "x86" )
 if ( MSVC )
 	if( (CMAKE_CL_64 OR CMAKE_GENERATOR MATCHES Win64) )
@@ -59,4 +63,5 @@ endif ()
 
 add_subdirectory( AquariumLib )
 add_subdirectory( AquariumRenderer )
+add_subdirectory( AquariumAppsCommon )
 add_subdirectory( Aquarium )

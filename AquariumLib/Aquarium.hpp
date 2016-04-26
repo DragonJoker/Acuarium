@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Signal.hpp"
+#include "FishRace.hpp"
 
 namespace aquarium
 {
