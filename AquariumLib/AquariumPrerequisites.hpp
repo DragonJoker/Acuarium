@@ -26,7 +26,7 @@ namespace aquarium
 
 	typedef enum FishRace : uint16_t
 	{
-		Basse,
+		Grouper,
 		Tuna,
 		Clown,
 		Sole,
@@ -44,7 +44,7 @@ namespace aquarium
 
 	template< FishRace RaceT > struct ConsumerTypeGetter;
 
-	template<> struct ConsumerTypeGetter< Basse >
+	template<> struct ConsumerTypeGetter< Grouper >
 	{
 		static ConsumerType const value = Carnivore;
 	};
@@ -76,7 +76,7 @@ namespace aquarium
 
 	template< FishRace RaceT > struct IsAgingHermaphrodite : public std::false_type{};
 	template<> struct IsAgingHermaphrodite< Bass > : public std::true_type{};
-	template<> struct IsAgingHermaphrodite< Basse > : public std::true_type{};
+	template<> struct IsAgingHermaphrodite< Grouper > : public std::true_type{};
 
 	template< FishRace RaceT > struct IsOpportunisiticHermaphrodite : public std::false_type{};
 	template<> struct IsOpportunisiticHermaphrodite< Sole > : public std::true_type{};

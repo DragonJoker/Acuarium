@@ -1,6 +1,6 @@
 #include <AquariumAppsPrerequisites.hpp>
 
-#include "ConsoleRenderer.hpp"
+#include "ConsoleAquariumRenderer.hpp"
 
 int main( int argc, char * argv[] )
 {

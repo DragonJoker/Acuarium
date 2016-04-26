@@ -11,8 +11,8 @@ namespace
 		aquarium::RaceFactory factory;
 		auto adds = turns.insert( { 0, aquarium::TurnAdds{} } ).first;
 		adds->second.m_seaweeds.emplace_back( 0 );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_01", aquarium::Male );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_02", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_01", aquarium::Male );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_01", aquarium::Female );
 	}
 
@@ -21,8 +21,8 @@ namespace
 		aquarium::RaceFactory factory;
 		auto adds = turns.insert( { 0, aquarium::TurnAdds{} } ).first;
 		adds->second.m_seaweeds.emplace_back( 0 );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_01", aquarium::Male );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_02", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_01", aquarium::Male );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_01", aquarium::Male );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Clown ), 0, "Clown_01", aquarium::Male );
@@ -40,9 +40,9 @@ namespace
 		aquarium::RaceFactory factory;
 		auto adds = turns.insert( { 0, aquarium::TurnAdds{} } ).first;
 		adds->second.m_seaweeds.emplace_back( 0 );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_01", aquarium::Male );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_02", aquarium::Female );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_03", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_01", aquarium::Male );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_02", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_03", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_01", aquarium::Male );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_03", aquarium::Female );
@@ -65,8 +65,8 @@ namespace
 		aquarium::RaceFactory factory;
 		auto adds = turns.insert( { 0, aquarium::TurnAdds{} } ).first;
 		adds->second.m_seaweeds.emplace_back( 0 );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_01", aquarium::Male );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_02", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_01", aquarium::Male );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_01", aquarium::Male );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Clown ), 0, "Clown_01", aquarium::Male );
@@ -78,9 +78,9 @@ namespace
 		aquarium::RaceFactory factory;
 		auto adds = turns.insert( { 0, aquarium::TurnAdds{} } ).first;
 		adds->second.m_seaweeds.emplace_back( 0 );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_01", aquarium::Male );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_02", aquarium::Female );
-		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Basse ), 0, "Basse_03", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_01", aquarium::Male );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_02", aquarium::Female );
+		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Grouper ), 0, "Grouper_03", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_01", aquarium::Male );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_02", aquarium::Female );
 		adds->second.m_fishes.emplace_back( factory.getRace( aquarium::Tuna ), 0, "Tuna_03", aquarium::Female );

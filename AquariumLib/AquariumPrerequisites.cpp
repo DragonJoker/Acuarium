@@ -25,13 +25,13 @@ namespace aquarium
 	{
 		static std::map< std::string, FishRace > const Races
 		{
-			{ "Basse", Basse },
+			{ "Grouper", Grouper },
 			{ "Tuna", Tuna },
 			{ "Clown", Clown },
 			{ "Sole", Sole },
 			{ "Bass", Bass },
 			{ "Carp", Carp },
-			{ "Mérou", Basse },
+			{ "Mérou", Grouper },
 			{ "Thon", Tuna },
 			{ "Poisson-clown", Clown },
 			{ "Sole", Sole },

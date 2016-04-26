@@ -7,7 +7,7 @@ namespace aquarium
 	RaceFactory::RaceFactory()
 		: m_races{
 			{
-				{ Basse, std::make_shared< Race< Basse > >() },
+				{ Grouper, std::make_shared< Race< Grouper > >() },
 				{ Tuna, std::make_shared< Race< Tuna > >() },
 				{ Clown, std::make_shared< Race< Clown > >() },
 				{ Sole, std::make_shared< Race< Sole > >() },

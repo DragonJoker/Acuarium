@@ -54,12 +54,12 @@ namespace aquarium
 
 		protected:
 			aquarium::Aquarium const & m_aquarium;
+			SeaweedRendererPtr m_seaweedRenderer;
+			FishRendererPtr m_fishRenderer;
 
 		private:
 			std::mutex m_mutex;
 			ActionArray m_actions;
-			SeaweedRendererPtr m_seaweedRenderer;
-			FishRendererPtr m_fishRenderer;
 			uint32_t m_connOnFishBorn{ 0 };
 			uint32_t m_connOnFishDie{ 0 };
 			uint32_t m_connOnFishEatFish{ 0 };
