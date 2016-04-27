@@ -1,10 +1,13 @@
 #pragma once
 
+#define GLEW_STATIC
+#include "GL/glew.h"
+
 #include <AquariumAppsPrerequisites.hpp>
 
 #include <glm/glm.hpp>
 
-void saveAquarium( std::string const & filename, aquarium::Aquarium const & aqua );
+#include "ObjElements.hpp"
 
 namespace aquarium
 {
@@ -21,5 +24,7 @@ namespace aquarium
 		using PlacedFish = std::pair< aquarium::FishPtr, glm::vec3 >;
 		using SeaweedArray = std::vector< PlacedSeaweed >;
 		using FishArray = std::vector< PlacedFish >;
+
+		bool checkGlError( std::string const & desc );
 	}
 }

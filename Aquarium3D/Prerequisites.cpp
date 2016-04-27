@@ -2,13 +2,20 @@
 
 #include <Aquarium.hpp>
 
-void saveAquarium( std::string const & filename, aquarium::Aquarium const & aqua )
+namespace aquarium
 {
-  std::ofstream out{ filename };
+	namespace render
+	{
+		bool checkGlError( std::string const & desc )
+		{
+			auto err = glGetError();
 
-  if ( out )
-  {
-    out << aqua;
-    out.close();
-  }
+			if ( err )
+			{
+				std::cerr << "OpenGL error " << std::hex << err << ", during operation: " << desc << std::endl;
+			}
+
+			return err == 0;
+		}
+	}
 }

@@ -1,0 +1,70 @@
+# Max2Mtl Version 4.0 Mar 10th, 2001
+#
+# Multi/Sub fishtank (7) to come 
+#
+newmtl tankft
+Ka  0.1 0.1 0.1
+Kd  0.7 0.7 0.7
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  3.0
+illum 2
+map_Kd tankft.jpg
+#
+newmtl tanklt
+Ka  0.1 0.1 0.1
+Kd  0.7 0.7 0.7
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  3.0
+illum 2
+map_Kd tanklt.tga
+#
+newmtl tankrt
+Ka  0.1 0.1 0.1
+Kd  0.7 0.7 0.7
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  3.0
+illum 2
+map_Kd tankrt.tga
+#
+newmtl tankwd1
+Ka  0.1 0.1 0.1
+Kd  0.7 0.7 0.7
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  3.0
+illum 2
+map_Kd tankwd1.tga
+#
+newmtl tankwd2
+Ka  0.1 0.1 0.1
+Kd  0.7 0.7 0.7
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  3.0
+illum 2
+map_Kd tankwd2.tga
+#
+newmtl tankwd3
+Ka  0.1 0.1 0.1
+Kd  0.7 0.7 0.7
+Ks  0.9 0.9 0.9
+d  1.0
+Ns  3.0
+illum 2
+map_Kd tankwd3.tga
+#
+newmtl tankglass
+Ka  0.0 0.0 0.2
+Kd  0.1 0.0 0.3
+Ks  1.0 1.0 1.0
+d  0.5
+Ns  10.0
+illum 2
+map_Kd tankgl.tga
+#
+# Multi/Sub fishtank done 
+#
+# EOF

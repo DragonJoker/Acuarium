@@ -1,0 +1,10 @@
+# 123D Sculpt Obj Exporter material file 
+# File Created : Sat Aug 16 03:24:25 2014
+
+newmtl ClownMaterial
+illum 1
+Ka 1 1 1
+Kd 1 1 1
+Ks 0 0 0
+map_Kd clown.tga
+map_Ka clown.tga

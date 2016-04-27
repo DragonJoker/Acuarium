@@ -1,0 +1,10 @@
+# 123D Sculpt Obj Exporter material file 
+# File Created : Mon Aug 18 12:06:34 2014
+
+newmtl GrouperMaterial
+illum 1
+Ka 1 1 1
+Kd 1 1 1
+Ks 0 0 0
+map_Kd grouper.tga
+map_Ka grouper.tga

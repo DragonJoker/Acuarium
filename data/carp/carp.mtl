@@ -1,0 +1,10 @@
+# 123D Sculpt Obj Exporter material file 
+# File Created : Mon Aug 18 10:36:29 2014
+
+newmtl CarpMaterial
+illum 1
+Ka 1 1 1
+Kd 1 1 1
+Ks 0 0 0
+map_Kd carp.tga
+map_Ka carp.tga
