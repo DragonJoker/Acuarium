@@ -8,7 +8,7 @@ namespace aquarium
 {
 	namespace render
 	{
-		bool TgaLoader::loadFile( obj::Texture & texture )
+		bool TgaLoader::loadFile( gl::Texture & texture )
 		{
 			TgaFile file;
 			auto ret = doLoadFile( texture.m_file, file );
@@ -18,20 +18,23 @@ namespace aquarium
 				texture.m_dimensions.x = file.imageWidth;
 				texture.m_dimensions.y = file.imageHeight;
 				texture.m_data = std::move( file.imageData );
+
 				if ( file.imageTypeCode == UncompressedRGB )
 				{
 					if ( file.bitCount == 32 )
 					{
 						texture.m_format = GL_RGBA;
+						texture.m_internal = GL_RGBA8;
 					}
 					else
 					{
 						texture.m_format = GL_RGB;
+						texture.m_internal = GL_RGB8;
 					}
 				}
 				else
 				{
-					texture.m_format = GL_LUMINANCE;
+					texture.m_format = GL_RED;
 				}
 			}
 
@@ -90,7 +93,11 @@ namespace aquarium
 			tgaFile.imageData.resize( imageSize );
 
 			// Read the image data.
-			fread( tgaFile.imageData.data(), sizeof( uint8_t ), imageSize, filePtr);
+			if ( imageSize != fread( tgaFile.imageData.data(), sizeof( uint8_t ), imageSize, filePtr ) )
+			{
+				fclose( filePtr );
+				return false;
+			}
 			
 			// Change from BGR to RGB so OpenGL can read the image data.
 			for ( int imageIdx = 0; imageIdx < imageSize; imageIdx += colorMode )

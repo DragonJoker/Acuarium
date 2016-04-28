@@ -2,8 +2,6 @@
 
 #include "AquariumPrerequisites.hpp"
 
-#include <functional>
-
 namespace aquarium
 {
 	template< typename Function >

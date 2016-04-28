@@ -94,56 +94,5 @@ namespace aquarium
 
 			std::cout << std::endl;
 		}
-
-		void ConsoleAquariumRenderer::doOnFishBorn( Fish const & fish, Fish const & lhs, Fish const & rhs )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] is born from the union of ";
-			std::cout << "[" << manip( lhs.getName() ) << "] and ";
-			std::cout << "[" << manip( rhs.getName() ) << "]" << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishDie( Fish const & fish )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] is dead. :'(" << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishEatFish( Fish const & fish, Fish const & prey )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] is feeding on [" << manip( prey.getName() ) << "]." << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishEatSeaweed( Fish const & fish, Seaweed const & )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] is feeding on a seaweed." << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishNoFood( Fish const & fish )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] is hungry, but no food." << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishNoMate( Fish const & fish )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] tried to reproduce, but no mate." << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishWrongMate( Fish const & fish, Fish const & )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] tried to reproduce, but mate was not compatible" << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnFishSwitchGender( Fish const & fish, Gender gender )
-		{
-			std::cout << "[" << manip( fish.getName() ) << "] switches gender from " << manip( gender );
-			std::cout << " to " << manip( fish.getGender() ) << "" << std::endl;
-		}
-
-		void ConsoleAquariumRenderer::doOnSeaweedBorn( Seaweed const &, Seaweed const & )
-		{
-		}
-
-		void ConsoleAquariumRenderer::doOnSeaweedDie( Seaweed const & )
-		{
-		}
 	}
 }

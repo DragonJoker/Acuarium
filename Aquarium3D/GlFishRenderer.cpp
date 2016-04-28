@@ -21,21 +21,19 @@ namespace aquarium
 			};
 
 			std::array< obj::Importer, RaceCount > importers;
-			importers[0].importMeshAsync( files[0] );
-			m_meshes[0] = importers[0].waitMesh();
-			//auto index = 0u;
+			auto index = 0u;
 
-			//for ( auto & importer : importers )
-			//{
-			//	importer.importMeshAsync( files[index++] );
-			//}
+			for ( auto & importer : importers )
+			{
+				importer.importMeshAsync( files[index++] );
+			}
 
-			//index = 0u;
+			index = 0u;
 
-			//for ( auto & importer : importers )
-			//{
-			//	m_meshes[index++] = importer.waitMesh();
-			//}
+			for ( auto & importer : importers )
+			{
+				m_meshes[index++] = importer.waitMesh();
+			}
 		}
 
 		GlFishRenderer::~GlFishRenderer ()
@@ -50,35 +48,35 @@ namespace aquarium
 		{
 		}
 
-		void GlFishRenderer::renderBorn( Fish const & fish, Fish const & lhs, Fish const & rhs )
+		void GlFishRenderer::doRenderBorn( Fish const & fish, Fish const & lhs, Fish const & rhs )
 		{
 		}
 
-		void GlFishRenderer::renderDie( Fish const & fish )
+		void GlFishRenderer::doRenderDie( Fish const & fish )
 		{
 		}
 
-		void GlFishRenderer::renderEat( Fish const & fish, Fish const & prey )
+		void GlFishRenderer::doRenderEat( Fish const & fish, Fish const & prey )
 		{
 		}
 
-		void GlFishRenderer::renderEat( Fish const & fish, Seaweed const & prey )
+		void GlFishRenderer::doRenderEat( Fish const & fish, Seaweed const & prey )
 		{
 		}
 
-		void GlFishRenderer::renderNoFood( Fish const & fish )
+		void GlFishRenderer::doRenderNoFood( Fish const & fish )
 		{
 		}
 
-		void GlFishRenderer::renderNoMate( Fish const & fish )
+		void GlFishRenderer::doRenderNoMate( Fish const & fish )
 		{
 		}
 
-		void GlFishRenderer::renderWrongMate( Fish const & fish, Fish const & mate )
+		void GlFishRenderer::doRenderWrongMate( Fish const & fish, Fish const & mate )
 		{
 		}
 
-		void GlFishRenderer::renderSwitchGender( Fish const & fish, Gender gender )
+		void GlFishRenderer::doRenderSwitchGender( Fish const & fish, Gender gender )
 		{
 		}
 	}

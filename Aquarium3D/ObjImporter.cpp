@@ -155,16 +155,19 @@ namespace aquarium
 					static std::string const F = "f";
 
 					std::string line;
-					auto matIt = context.loadedMaterials.end();
+					auto matIt = context.mesh.m_materials.end();
 					PositionArray allPos;
 					TexCoordArray allTex;
 					NormalArray allNml;
 					FaceArray allFaces;
 					Submesh current;
+					UIntUInt64Map vtxIndices;
+					uint32_t lineNumber{ 0 };
 
 					while ( std::getline( file, line ) )
 					{
 						trim( line );
+						++lineNumber;
 
 						if ( !line.empty() && line[0] != '#' )
 						{
@@ -191,30 +194,26 @@ namespace aquarium
 								else if ( section == UseMtl )
 								{
 									// Material
-									matIt = context.loadedMaterials.find( value );
+									matIt = context.mesh.m_materials.find( value );
 
-									if ( matIt != context.loadedMaterials.end() )
+									if ( matIt != context.mesh.m_materials.end() )
 									{
-										current.m_material = matIt->second;
+										current.m_material = &matIt->second;
 									}
 								}
 								else if ( section == Group || section == G || section == S )
 								{
 									// Submesh
-									if ( value.empty() )
+									if ( !current.m_vertex.empty() && !current.m_faces.empty() )
 									{
-										value = "(null)";
+										context.mesh.m_submeshes.push_back( std::move( current ) );
+										UIntUInt64Map tmp;
+										std::swap( tmp, vtxIndices );
 									}
 
-									//if ( !current.m_vertex.empty() )
+									if ( matIt != context.mesh.m_materials.end() )
 									{
-										context.mesh.m_submeshes.push_back( current );
-										current = Submesh{};
-									}
-
-									if ( matIt != context.loadedMaterials.end() )
-									{
-										current.m_material = matIt->second;
+										current.m_material = &matIt->second;
 									}
 								}
 								else if ( section == V )
@@ -225,60 +224,60 @@ namespace aquarium
 									stream >> vertex.x >> vertex.y >> vertex.z;
 									allPos.push_back( vertex );
 								}
-								//else if ( section == VT )
-								//{
-								//	// Vertex UV
-								//	std::stringstream stream( value );
-								//	glm::vec2 uvw;
-								//	stream >> uvw.x >> uvw.y;
-								//	allTex.push_back( uvw );
-								//}
-								//else if ( section == VN )
-								//{
-								//	// Vertex Normal
-								//	std::stringstream stream( value );
-								//	glm::vec3 normal;
-								//	stream >> normal.x >> normal.y >> normal.z;
-								//	allNml.push_back( normal );
-								//}
-								//else if ( section == F )
-								//{
-								//	// Face indices
-								//	auto faceValues = split( value, " \t", false, 0xFFFFFFFF );
+								else if ( section == VT )
+								{
+									// Vertex UV
+									std::stringstream stream( value );
+									glm::vec2 uvw;
+									stream >> uvw.x >> uvw.y;
+									allTex.push_back( uvw );
+								}
+								else if ( section == VN )
+								{
+									// Vertex Normal
+									std::stringstream stream( value );
+									glm::vec3 normal;
+									stream >> normal.x >> normal.y >> normal.z;
+									allNml.push_back( normal );
+								}
+								else if ( section == F )
+								{
+									// Face indices
+									auto faceValues = split( value, " \t", false, 0xFFFFFFFF );
 
-								//	if ( faceValues.size() == 3 )
-								//	{
-								//		// Face represented by 3 vertices
-								//		glm::ivec3 face;
-								//		face.x = doProcessFace( faceValues[0], current, allPos, allNml, allTex );
-								//		face.y = doProcessFace( faceValues[2], current, allPos, allNml, allTex );
-								//		face.z = doProcessFace( faceValues[1], current, allPos, allNml, allTex );
-								//		current.m_faces.push_back( face );
-								//		allFaces.push_back( face );
-								//	}
-								//	else if ( faceValues.size() == 4 )
-								//	{
-								//		// Face represented by 4 vertices
-								//		glm::ivec3 face;
-								//		face.x = doProcessFace( faceValues[0], current, allPos, allNml, allTex );
-								//		face.y = doProcessFace( faceValues[2], current, allPos, allNml, allTex );
-								//		face.z = doProcessFace( faceValues[1], current, allPos, allNml, allTex );
-								//		current.m_faces.push_back( face );
-								//		allFaces.push_back( face );
-								//		face.x = doProcessFace( faceValues[0], current, allPos, allNml, allTex );
-								//		face.y = doProcessFace( faceValues[3], current, allPos, allNml, allTex );
-								//		face.z = doProcessFace( faceValues[2], current, allPos, allNml, allTex );
-								//		current.m_faces.push_back( face );
-								//		allFaces.push_back( face );
-								//	}
-								//}
+									if ( faceValues.size() == 3 )
+									{
+										// Face represented by 3 vertices
+										glm::ivec3 face;
+										face.x = doProcessFace( faceValues[0], vtxIndices, current, allPos, allNml, allTex );
+										face.y = doProcessFace( faceValues[2], vtxIndices, current, allPos, allNml, allTex );
+										face.z = doProcessFace( faceValues[1], vtxIndices, current, allPos, allNml, allTex );
+										current.m_faces.push_back( face );
+										allFaces.push_back( face );
+									}
+									else if ( faceValues.size() == 4 )
+									{
+										// Face represented by 4 vertices
+										glm::ivec3 face;
+										face.x = doProcessFace( faceValues[0], vtxIndices, current, allPos, allNml, allTex );
+										face.y = doProcessFace( faceValues[2], vtxIndices, current, allPos, allNml, allTex );
+										face.z = doProcessFace( faceValues[1], vtxIndices, current, allPos, allNml, allTex );
+										current.m_faces.push_back( face );
+										allFaces.push_back( face );
+										face.x = doProcessFace( faceValues[0], vtxIndices, current, allPos, allNml, allTex );
+										face.y = doProcessFace( faceValues[3], vtxIndices, current, allPos, allNml, allTex );
+										face.z = doProcessFace( faceValues[2], vtxIndices, current, allPos, allNml, allTex );
+										current.m_faces.push_back( face );
+										allFaces.push_back( face );
+									}
+								}
 							}
 						}
 					}
 
-					//if ( !current.m_vertex.empty() )
+					if ( !current.m_vertex.empty() && !current.m_faces.empty() )
 					{
-						context.mesh.m_submeshes.push_back( current );
+						context.mesh.m_submeshes.push_back( std::move( current ) );
 					}
 				}
 				else
@@ -287,7 +286,7 @@ namespace aquarium
 				}
 			}
 
-			uint32_t Importer::doProcessFace( std::string const & value, Submesh & submesh, PositionArray const & arrayPos, NormalArray const & arrayNml, TexCoordArray const & arrayTex )
+			uint32_t Importer::doProcessFace( std::string const & value, UIntUInt64Map & vtxIndices, Submesh & submesh, PositionArray const & arrayPos, NormalArray const & arrayNml, TexCoordArray const & arrayTex )
 			{
 				//	VertexSPtr l_return;
 				std::string face( value );
@@ -338,12 +337,12 @@ namespace aquarium
 					}
 
 					auto hash = ( uint64_t( posIdx ) << 32 ) + texIdx;
-					auto it = submesh.m_vtxIndices.find( hash );
+					auto it = vtxIndices.find( hash );
 
-					if ( it == submesh.m_vtxIndices.end() )
+					if ( it == vtxIndices.end() )
 					{
 						// Vertex hasn't been inserted yet, so we insert it, to have good index, relative to the group's vertex
-						it = submesh.m_vtxIndices.insert( { hash, uint32_t( submesh.m_vertex.size() ) } ).first;
+						it = vtxIndices.insert( { hash, uint32_t( submesh.m_vertex.size() ) } ).first;
 						submesh.m_vertex.push_back( { arrayPos[posIdx], nml, tex } );
 					}
 
@@ -388,7 +387,7 @@ namespace aquarium
 
 				std::ifstream file{ mtlFilePath };
 				std::string line;
-				auto matIt = context.loadedMaterials.end();
+				auto matIt = context.mesh.m_materials.end();
 
 				while ( std::getline( file, line ) )
 				{
@@ -414,7 +413,7 @@ namespace aquarium
 							if ( section == NewMtl )
 							{
 								// New material description
-								matIt = context.loadedMaterials.insert( { value, Material{} } ).first;
+								matIt = context.mesh.m_materials.insert( { value, gl::Material{} } ).first;
 							}
 							else if ( section == KA )
 							{
@@ -466,7 +465,7 @@ namespace aquarium
 				}
 			}
 
-			void Importer::doAddTexture( std::string const & value, Texture & texture, Context & context )
+			void Importer::doAddTexture( std::string const & value, gl::Texture & texture, Context & context )
 			{
 				if ( !value.empty() )
 				{

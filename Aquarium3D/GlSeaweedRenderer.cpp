@@ -16,11 +16,11 @@ namespace aquarium
 		{
 		}
 
-		void GlSeaweedRenderer::renderBorn( Seaweed const & seaweed, Seaweed const & parent )
+		void GlSeaweedRenderer::doRenderBorn( Seaweed const & seaweed, Seaweed const & parent )
 		{
 		}
 
-		void GlSeaweedRenderer::renderDie( Seaweed const & seaweed )
+		void GlSeaweedRenderer::doRenderDie( Seaweed const & seaweed )
 		{
 		}
 	}

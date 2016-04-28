@@ -4,11 +4,11 @@
 
 void saveAquarium( std::string const & filename, aquarium::Aquarium const & aqua )
 {
-  std::ofstream out{ filename };
+	std::ofstream out{ filename };
 
-  if ( out )
-  {
-    out << aqua;
-    out.close();
-  }
+	if ( out )
+	{
+		out << aqua;
+		out.close();
+	}
 }

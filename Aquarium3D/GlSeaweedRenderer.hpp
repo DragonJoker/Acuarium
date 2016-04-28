@@ -15,11 +15,10 @@ namespace aquarium
 			GlSeaweedRenderer();
 			~GlSeaweedRenderer();
 
-			void renderBorn( Seaweed const & seaweed, Seaweed const & parent );
-			void renderDie( Seaweed const & fish );
-
 		private:
 			virtual void doRender( Seaweed const & seaweed );
+			virtual void doRenderBorn( Seaweed const & seaweed, Seaweed const & parent );
+			virtual void doRenderDie( Seaweed const & seaweed );
 		};
 	}
 }

@@ -17,17 +17,16 @@ namespace aquarium
 			GlFishRenderer();
 			~GlFishRenderer();
 
-			void renderBorn( Fish const & fish, Fish const & lhs, Fish const & rhs );
-			void renderDie( Fish const & fish );
-			void renderEat( Fish const & fish, Fish const & prey );
-			void renderEat( Fish const & fish, Seaweed const & prey );
-			void renderNoFood( Fish const & fish );
-			void renderNoMate( Fish const & fish );
-			void renderWrongMate( Fish const & fish, Fish const & mate );
-			void renderSwitchGender( Fish const & fish, Gender gender );
-
 		private:
 			virtual void doRender( Fish const & fish );
+			virtual void doRenderBorn( Fish const & fish, Fish const & lhs, Fish const & rhs );
+			virtual void doRenderDie( Fish const & fish );
+			virtual void doRenderEat( Fish const & fish, Fish const & prey );
+			virtual void doRenderEat( Fish const & fish, Seaweed const & prey );
+			virtual void doRenderNoFood( Fish const & fish );
+			virtual void doRenderNoMate( Fish const & fish );
+			virtual void doRenderWrongMate( Fish const & fish, Fish const & mate );
+			virtual void doRenderSwitchGender( Fish const & fish, Gender gender );
 
 		private:
 			std::array< obj::Mesh, RaceCount > m_meshes;

@@ -41,16 +41,6 @@ namespace aquarium
 
 			virtual void doPreRender( uint32_t turn ) = 0;
 			virtual void doRender() = 0;
-			virtual void doOnFishBorn( Fish const & fish, Fish const & lhs, Fish const & rhs ) = 0;
-			virtual void doOnFishDie( Fish const & fish ) = 0;
-			virtual void doOnFishEatFish( Fish const & fish, Fish const & prey ) = 0;
-			virtual void doOnFishEatSeaweed( Fish const & fish, Seaweed const & prey ) = 0;
-			virtual void doOnFishNoFood( Fish const & fish ) = 0;
-			virtual void doOnFishNoMate( Fish const & fish ) = 0;
-			virtual void doOnFishWrongMate( Fish const & fish, Fish const & mate ) = 0;
-			virtual void doOnFishSwitchGender( Fish const & fish, Gender gender ) = 0;
-			virtual void doOnSeaweedBorn( Seaweed const & seaweed, Seaweed const & parent ) = 0;
-			virtual void doOnSeaweedDie( Seaweed const & seaweed ) = 0;
 
 		protected:
 			aquarium::Aquarium const & m_aquarium;

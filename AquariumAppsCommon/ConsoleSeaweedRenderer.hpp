@@ -15,6 +15,8 @@ namespace aquarium
 
 		private:
 			virtual void doRender( Seaweed const & seaweed );
+			virtual void doRenderBorn( Seaweed const &, Seaweed const & );
+			virtual void doRenderDie( Seaweed const & );
 		};
 	}
 }

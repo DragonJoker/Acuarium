@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cassert>
+#include "Exception.hpp"
 
 namespace aquarium
 {

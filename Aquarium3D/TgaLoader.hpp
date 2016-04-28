@@ -24,7 +24,7 @@ namespace aquarium
 			};
 
 		public:
-			bool loadFile( obj::Texture & texture );
+			bool loadFile( gl::Texture & texture );
 
 		private:
 			bool doLoadFile( std::string const & filename, TgaFile & tgaFile );

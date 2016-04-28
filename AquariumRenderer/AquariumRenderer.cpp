@@ -63,7 +63,7 @@ namespace aquarium
 				auto copyRhs{ copy( rhs ) };
 				doPushAction( [this, copyFish, copyLhs, copyRhs]()
 				{
-					doOnFishBorn( *copyFish, *copyLhs, *copyRhs );
+					m_fishRenderer->renderBorn( *copyFish, *copyLhs, *copyRhs );
 				} );
 			} );
 			m_connOnFishDie = aqua.onFishDie.connect( [this]( Fish const & fish )
@@ -71,7 +71,7 @@ namespace aquarium
 				auto copyFish{ copy( fish ) };
 				doPushAction( [this, copyFish]
 				{
-					doOnFishDie( *copyFish );
+					m_fishRenderer->renderDie( *copyFish );
 				} );
 			} );
 			m_connOnFishEatFish = aqua.onFishEatFish.connect( [this]( Fish const & fish, Fish const & prey )
@@ -80,7 +80,7 @@ namespace aquarium
 				auto copyPrey{ copy( prey ) };
 				doPushAction( [this, copyFish, copyPrey]()
 				{
-					doOnFishEatFish( *copyFish, *copyPrey );
+					m_fishRenderer->renderEat( *copyFish, *copyPrey );
 				} );
 			} );
 			m_connOnFishEatSeaweed = aqua.onFishEatSeaweed.connect( [this]( Fish const & fish, Seaweed const & prey )
@@ -89,7 +89,7 @@ namespace aquarium
 				auto copyPrey{ copy( prey ) };
 				doPushAction( [this, &copyFish, &copyPrey]()
 				{
-					doOnFishEatSeaweed( *copyFish, *copyPrey );
+					m_fishRenderer->renderEat( *copyFish, *copyPrey );
 				} );
 			} );
 			m_connOnFishNoFood = aqua.onFishNoFood.connect( [this]( Fish const & fish )
@@ -97,7 +97,7 @@ namespace aquarium
 				auto copyFish{ copy( fish ) };
 				doPushAction( [this, copyFish]
 				{
-					doOnFishNoFood( *copyFish );
+					m_fishRenderer->renderNoFood( *copyFish );
 				} );
 			} );
 			m_connOnFishNoMate = aqua.onFishNoMate.connect( [this]( Fish const & fish )
@@ -105,7 +105,7 @@ namespace aquarium
 				auto copyFish{ copy( fish ) };
 				doPushAction( [this, copyFish]
 				{
-					doOnFishNoMate( *copyFish );
+					m_fishRenderer->renderNoMate( *copyFish );
 				} );
 			} );
 			m_connOnFishWrongMate = aqua.onFishWrongMate.connect( [this]( Fish const & fish, Fish const & mate )
@@ -114,7 +114,7 @@ namespace aquarium
 				auto copyMate{ copy( mate ) };
 				doPushAction( [this, copyFish, copyMate]
 				{
-					doOnFishWrongMate( *copyFish, *copyMate );
+					m_fishRenderer->renderWrongMate( *copyFish, *copyMate );
 				} );
 			} );
 			m_connOnFishSwithGender = aqua.onFishSwitchGender.connect( [this]( Fish const & fish, Gender gender )
@@ -122,7 +122,7 @@ namespace aquarium
 				auto copyFish{ copy( fish ) };
 				doPushAction( [this, copyFish, gender]
 				{
-					doOnFishSwitchGender( *copyFish, gender );
+					m_fishRenderer->renderSwitchGender( *copyFish, gender );
 				} );
 			} );
 			m_connOnSeaweedBorn = aqua.onSeaweedBorn.connect( [this]( Seaweed const & seaweed, Seaweed const & parent )
@@ -131,7 +131,7 @@ namespace aquarium
 				auto copyParent{ copy( parent ) };
 				doPushAction( [this, copySeaweed, copyParent]()
 				{
-					doOnSeaweedBorn( *copySeaweed, *copyParent );
+					m_seaweedRenderer->renderBorn( *copySeaweed, *copyParent );
 				} );
 			} );
 			m_connOnSeaweedDie = aqua.onSeaweedDie.connect( [this]( Seaweed const & seaweed )
@@ -139,7 +139,7 @@ namespace aquarium
 				auto copySeaweed{ copy( seaweed ) };
 				doPushAction( [this, copySeaweed]()
 				{
-					doOnSeaweedDie( *copySeaweed );
+					m_seaweedRenderer->renderDie( *copySeaweed );
 				} );
 			} );
 		}

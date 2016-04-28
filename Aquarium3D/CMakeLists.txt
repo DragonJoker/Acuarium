@@ -10,6 +10,8 @@ if ( OPENGL_FOUND AND GLFW_FOUND AND GLM_FOUND )
 	file( GLOB_RECURSE HEADER_FILES *.hpp *.h )
 	file( GLOB_RECURSE SOURCE_FILES *.cpp *.c )
 
+	add_definitions( -DGLEW_STATIC )
+
 	include_directories(
 		${CMAKE_SOURCE_DIR}/AquariumLib
 		${CMAKE_SOURCE_DIR}/AquariumRenderer

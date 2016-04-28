@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <clocale>
 #include <cstdint>
 #include <functional>
