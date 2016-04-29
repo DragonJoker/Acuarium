@@ -8,8 +8,12 @@ namespace aquarium
 		: public Living
 	{
 	public:
-		Seaweed( uint16_t age, uint16_t health = 10 );
-		virtual ~Seaweed() = default;
+		Seaweed( uint16_t age, uint16_t health = 10u );
+		~Seaweed() = default;
+		Seaweed( Seaweed && ) = default;
+		Seaweed & operator=( Seaweed && ) = default;
+		Seaweed( Seaweed const & ) = delete;
+		Seaweed & operator=( Seaweed const & ) = delete;
 
 		SeaweedPtr grow();
 		void beEaten();

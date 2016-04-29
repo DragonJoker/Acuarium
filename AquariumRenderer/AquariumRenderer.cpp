@@ -7,6 +7,19 @@ namespace aquarium
 {
 	namespace render
 	{
+		namespace
+		{
+			std::shared_ptr< Fish > copy( Fish const & fish )
+			{
+				return std::make_shared< Fish >( fish.getRace(), fish.getAge(), fish.getName(), fish.getGender(), fish.getHealth() );
+			}
+
+			std::shared_ptr< Seaweed > copy( Seaweed const & seaweed )
+			{
+				return std::make_shared<Seaweed >( seaweed.getAge(), seaweed.getHealth() );
+			}
+		}
+
 		AquariumRenderer::AquariumRenderer( aquarium::Aquarium const & aqua, FishRendererPtr && p_fr, SeaweedRendererPtr && p_sr )
 			: m_aquarium{ aqua }
 			, m_fishRenderer{ std::move( p_fr ) }
@@ -38,79 +51,95 @@ namespace aquarium
 				action();
 			}
 
-			doRender( turn );
+			doRender();
 		}
 
 		void AquariumRenderer::initialise( Aquarium const & aqua )
 		{
 			m_connOnFishBorn = aqua.onFishBorn.connect( [this]( Fish const & fish, Fish const & lhs, Fish const & rhs )
 			{
-				doPushAction( [this, fish, lhs, rhs]()
+				auto copyFish{ copy( fish ) };
+				auto copyLhs{ copy( lhs ) };
+				auto copyRhs{ copy( rhs ) };
+				doPushAction( [this, copyFish, copyLhs, copyRhs]()
 				{
-					doOnFishBorn( fish, lhs, rhs );
+					doOnFishBorn( *copyFish, *copyLhs, *copyRhs );
 				} );
 			} );
 			m_connOnFishDie = aqua.onFishDie.connect( [this]( Fish const & fish )
 			{
-				doPushAction( [this, fish]
+				auto copyFish{ copy( fish ) };
+				doPushAction( [this, copyFish]
 				{
-					doOnFishDie( fish );
+					doOnFishDie( *copyFish );
 				} );
 			} );
 			m_connOnFishEatFish = aqua.onFishEatFish.connect( [this]( Fish const & fish, Fish const & prey )
 			{
-				doPushAction( [this, fish, prey]()
+				auto copyFish{ copy( fish ) };
+				auto copyPrey{ copy( prey ) };
+				doPushAction( [this, copyFish, copyPrey]()
 				{
-					doOnFishEatFish( fish, prey );
+					doOnFishEatFish( *copyFish, *copyPrey );
 				} );
 			} );
 			m_connOnFishEatSeaweed = aqua.onFishEatSeaweed.connect( [this]( Fish const & fish, Seaweed const & prey )
 			{
-				doPushAction( [this, fish, prey]()
+				auto copyFish{ copy( fish ) };
+				auto copyPrey{ copy( prey ) };
+				doPushAction( [this, &copyFish, &copyPrey]()
 				{
-					doOnFishEatSeaweed( fish, prey );
+					doOnFishEatSeaweed( *copyFish, *copyPrey );
 				} );
 			} );
 			m_connOnFishNoFood = aqua.onFishNoFood.connect( [this]( Fish const & fish )
 			{
-				doPushAction( [this, fish]
+				auto copyFish{ copy( fish ) };
+				doPushAction( [this, copyFish]
 				{
-					doOnFishNoFood( fish );
+					doOnFishNoFood( *copyFish );
 				} );
 			} );
 			m_connOnFishNoMate = aqua.onFishNoMate.connect( [this]( Fish const & fish )
 			{
-				doPushAction( [this, fish]
+				auto copyFish{ copy( fish ) };
+				doPushAction( [this, copyFish]
 				{
-					doOnFishNoMate( fish );
+					doOnFishNoMate( *copyFish );
 				} );
 			} );
 			m_connOnFishWrongMate = aqua.onFishWrongMate.connect( [this]( Fish const & fish, Fish const & mate )
 			{
-				doPushAction( [this, fish, mate]
+				auto copyFish{ copy( fish ) };
+				auto copyMate{ copy( mate ) };
+				doPushAction( [this, copyFish, copyMate]
 				{
-					doOnFishWrongMate( fish, mate );
+					doOnFishWrongMate( *copyFish, *copyMate );
 				} );
 			} );
 			m_connOnFishSwithGender = aqua.onFishSwitchGender.connect( [this]( Fish const & fish, Gender gender )
 			{
-				doPushAction( [this, fish, gender]
+				auto copyFish{ copy( fish ) };
+				doPushAction( [this, copyFish, gender]
 				{
-					doOnFishSwitchGender( fish, gender );
+					doOnFishSwitchGender( *copyFish, gender );
 				} );
 			} );
 			m_connOnSeaweedBorn = aqua.onSeaweedBorn.connect( [this]( Seaweed const & seaweed, Seaweed const & parent )
 			{
-				doPushAction( [this, seaweed, parent]()
+				auto copySeaweed{ copy( seaweed ) };
+				auto copyParent{ copy( parent ) };
+				doPushAction( [this, copySeaweed, copyParent]()
 				{
-					doOnSeaweedBorn( seaweed, parent );
+					doOnSeaweedBorn( *copySeaweed, *copyParent );
 				} );
 			} );
 			m_connOnSeaweedDie = aqua.onSeaweedDie.connect( [this]( Seaweed const & seaweed )
 			{
-				doPushAction( [this, seaweed]()
+				auto copySeaweed{ copy( seaweed ) };
+				doPushAction( [this, copySeaweed]()
 				{
-					doOnSeaweedDie( seaweed );
+					doOnSeaweedDie( *copySeaweed );
 				} );
 			} );
 		}

@@ -5,9 +5,9 @@
 
 namespace aquarium
 {
-	AquariumGame::AquariumGame( Aquarium & aquarium, TurnAddsMap const & turnsAdds )
+	AquariumGame::AquariumGame( Aquarium & aquarium, TurnAddsMap && turnsAdds )
 		: m_aquarium{ aquarium }
-		, m_turnsAdds{ turnsAdds }
+		, m_turnsAdds{ std::move( turnsAdds ) }
 	{
 		doAddTurnAdds();
 	}

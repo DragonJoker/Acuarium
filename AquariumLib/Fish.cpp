@@ -4,12 +4,13 @@
 
 namespace aquarium
 {
-	Fish::Fish( RacePtr race, uint16_t age, std::string const & name, Gender gender )
-		: Living{ age, 10u }
+	Fish::Fish( RacePtr race, uint16_t age, std::string const & name, Gender gender, uint16_t health )
+		: Living{ age, health }
 		, m_race{ race }
 		, m_name{ name }
 		, m_gender{ gender }
 	{
+		assert( gender == Female || gender == Male );
 	}
 
 	void Fish::beEaten()

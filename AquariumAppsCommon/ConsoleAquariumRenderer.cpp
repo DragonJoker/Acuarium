@@ -25,47 +25,55 @@ namespace aquarium
 			std::cout << "****************************************\n\n";
 		}
 
-		void ConsoleAquariumRenderer::doRender( uint32_t turn )
+		void ConsoleAquariumRenderer::doRender()
 		{
 			std::cout << "\n";
 			std::cout << "****************************************\n";
 			std::cout << "Aquarium's content:\n";
 			std::cout << "****************************************\n\n";
 			std::cout << "Seaweeds: ";
-			std::cout << m_aquarium.getSeaweeds().size() << "\n";
+			std::cout << m_aquarium.seaweedsCount() << "\n";
 			uint16_t age{ 0 };
 			uint16_t health{ 0 };
 			uint32_t count{ 0 };
-			auto seaweeds = m_aquarium.getSeaweeds();
-			auto fishes = m_aquarium.getFishes();
 
-			std::sort( std::begin( seaweeds ), std::end( seaweeds ), []( Seaweed const & lhs, Seaweed const & rhs )
+			std::vector< Seaweed const * > seaweeds;
+			std::for_each( m_aquarium.seaweedsBegin(), m_aquarium.seaweedsEnd(), [this, &seaweeds]( Seaweed const & seaweed )
 			{
-				return lhs.getHealth() < rhs.getHealth()
-					|| ( lhs.getHealth() == rhs.getHealth()
-						  && lhs.getAge() < rhs.getAge() );
+				seaweeds.push_back( &seaweed );
+			} );
+			std::sort( std::begin( seaweeds ), std::end( seaweeds ), []( Seaweed const * lhs, Seaweed const * rhs )
+			{
+				return lhs->getHealth() < rhs->getHealth()
+					|| ( lhs->getHealth() == rhs->getHealth()
+						  && lhs->getAge() < rhs->getAge() );
 			} );
 
-			std::sort( std::begin( fishes ), std::end( fishes ), []( Fish const & lhs, Fish const & rhs )
+			std::vector< Fish const * > fishes;
+			std::for_each( m_aquarium.fishesBegin(), m_aquarium.fishesEnd(), [this, &fishes]( Fish const & fish )
 			{
-				return lhs.getRace() < rhs.getRace()
-					|| ( lhs.getRace() == rhs.getRace()
-						  && ( lhs.getHealth() < rhs.getHealth()
-							  || ( lhs.getHealth() == rhs.getHealth()
-									&& lhs.getAge() < rhs.getAge() ) ) );
+				fishes.push_back( &fish );
+			} );
+			std::sort( std::begin( fishes ), std::end( fishes ), []( Fish const * lhs, Fish const * rhs )
+			{
+				return lhs->getRace() < rhs->getRace()
+					|| ( lhs->getRace() == rhs->getRace()
+						  && ( lhs->getHealth() < rhs->getHealth()
+							  || ( lhs->getHealth() == rhs->getHealth()
+									&& lhs->getAge() < rhs->getAge() ) ) );
 			} );
 
-			for ( auto const & seaweed : seaweeds )
+			for ( auto seaweed : seaweeds )
 			{
-				if ( seaweed.getAge() != age && seaweed.getHealth() != health && count > 0 )
+				if ( seaweed->getAge() != age && seaweed->getHealth() != health && count > 0 )
 				{
 					std::cout << "(" << count << ") Seaweeds";
 					m_seaweedRenderer->render( Seaweed{ age, health } );
 					count = 0;
 				}
 
-				age = seaweed.getAge();
-				health = seaweed.getHealth();
+				age = seaweed->getAge();
+				health = seaweed->getHealth();
 				++count;
 			}
 
@@ -77,11 +85,11 @@ namespace aquarium
 
 			std::cout << "\n";
 			std::cout << "Fishes: ";
-			std::cout << m_aquarium.getFishes().size() << "\n";
+			std::cout << m_aquarium.fishesCount() << "\n";
 
-			for ( auto const & fish : fishes )
+			for ( auto fish : fishes )
 			{
-				m_fishRenderer->render( fish );
+				m_fishRenderer->render( *fish );
 			}
 
 			std::cout << std::endl;
@@ -104,7 +112,7 @@ namespace aquarium
 			std::cout << "[" << manip( fish.getName() ) << "] is feeding on [" << manip( prey.getName() ) << "]." << std::endl;
 		}
 
-		void ConsoleAquariumRenderer::doOnFishEatSeaweed( Fish const & fish, Seaweed const & prey )
+		void ConsoleAquariumRenderer::doOnFishEatSeaweed( Fish const & fish, Seaweed const & )
 		{
 			std::cout << "[" << manip( fish.getName() ) << "] is feeding on a seaweed." << std::endl;
 		}
@@ -119,7 +127,7 @@ namespace aquarium
 			std::cout << "[" << manip( fish.getName() ) << "] tried to reproduce, but no mate." << std::endl;
 		}
 
-		void ConsoleAquariumRenderer::doOnFishWrongMate( Fish const & fish, Fish const & mate )
+		void ConsoleAquariumRenderer::doOnFishWrongMate( Fish const & fish, Fish const & )
 		{
 			std::cout << "[" << manip( fish.getName() ) << "] tried to reproduce, but mate was not compatible" << std::endl;
 		}
@@ -130,11 +138,11 @@ namespace aquarium
 			std::cout << " to " << manip( fish.getGender() ) << "" << std::endl;
 		}
 
-		void ConsoleAquariumRenderer::doOnSeaweedBorn( Seaweed const & seaweed, Seaweed const & parent )
+		void ConsoleAquariumRenderer::doOnSeaweedBorn( Seaweed const &, Seaweed const & )
 		{
 		}
 
-		void ConsoleAquariumRenderer::doOnSeaweedDie( Seaweed const & seaweed )
+		void ConsoleAquariumRenderer::doOnSeaweedDie( Seaweed const & )
 		{
 		}
 	}

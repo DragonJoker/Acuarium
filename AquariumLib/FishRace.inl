@@ -1,5 +1,4 @@
-#include "Fish.hpp"
-#include "Seaweed.hpp"
+#include "Exception.hpp"
 
 namespace aquarium
 {
@@ -41,7 +40,7 @@ namespace aquarium
 		template< FishRace RaceT, typename Enable >
 		struct RaceGrowT
 		{
-			static inline void apply( Fish & current )
+			static inline void apply( Fish & )
 			{
 			}
 		};
@@ -63,7 +62,7 @@ namespace aquarium
 		template< FishRace RaceT, typename Enable >
 		struct RaceEatT
 		{
-			static inline void apply( Fish & current, FishArray & fishes, SeaweedArray & seaweeds, Fish *& fish, Seaweed *& seaweed )
+			static inline void apply( Fish & current, FishArray & fishes, SeaweedArray &, Fish *& fish, Seaweed *& )
 			{
 				auto & food = detail::doGetRandom< NoFoodException >( fishes, [&current]( Fish const & candidate )
 				{
@@ -78,9 +77,9 @@ namespace aquarium
 		template< FishRace RaceT >
 		struct RaceEatT< RaceT, typename std::enable_if< ConsumerTypeGetter< RaceT >::value == Herbivore >::type >
 		{
-			static inline void apply( Fish & current, FishArray & fishes, SeaweedArray & seaweeds, Fish *& fish, Seaweed *& seaweed )
+			static inline void apply( Fish &, FishArray &, SeaweedArray & seaweeds, Fish *&, Seaweed *& seaweed )
 			{
-				auto & food = detail::doGetRandom< NoFoodException >( seaweeds, []( Seaweed const & seaweed )
+				auto & food = detail::doGetRandom< NoFoodException >( seaweeds, []( Seaweed const & )
 				{
 					return true;
 				} );

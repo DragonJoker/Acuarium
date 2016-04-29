@@ -97,61 +97,6 @@ namespace aquarium
 	using FishArray = std::vector< Fish >;
 	using SeaweedArray = std::vector< Seaweed >;
 
-	class NoFoodException
-		: public std::exception
-	{
-	public:
-		virtual char const * what() const noexcept
-		{
-			return "No more food";
-		}
-	};
-
-	class NoMateException
-		: public std::exception
-	{
-	public:
-		virtual char const * what() const noexcept
-		{
-			return "No mate";
-		}
-	};
-
-	class WrongMateException
-		: public std::exception
-	{
-	public:
-		WrongMateException( Fish const & mate )
-			: m_mate{ mate }
-		{
-		}
-
-		virtual char const * what() const noexcept
-		{
-			return "Mate was not compatible";
-		}
-
-		inline Fish const & getMate()const
-		{
-			return m_mate;
-		}
-
-	private:
-		Fish const & m_mate;
-	};
-
-	class NonCopyable
-	{
-		NonCopyable( NonCopyable const & ) = delete;
-		NonCopyable & operator=( NonCopyable const & ) = delete;
-		NonCopyable( NonCopyable && ) = delete;
-		NonCopyable & operator=( NonCopyable && ) = delete;
-
-	public:
-		NonCopyable() = default;
-		~NonCopyable() = default;
-	};
-
 	Gender getGender( std::string const & name );
 	FishRace getRace( std::string const & name );
 	std::string getRandomName();

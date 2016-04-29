@@ -8,8 +8,12 @@ namespace aquarium
 		: public Living
 	{
 	public:
-		Fish( RacePtr race, uint16_t age, std::string const & name, Gender gender );
+		Fish( RacePtr race, uint16_t age, std::string const & name, Gender gender, uint16_t health = 10u );
 		~Fish() = default;
+		Fish( Fish && ) = default;
+		Fish & operator=( Fish && ) = default;
+		Fish( Fish const & ) = delete;
+		Fish & operator=( Fish const & ) = delete;
 
 		FishPtr grow( FishArray & fishes, SeaweedArray & seaweeds, Fish *& fishOrMate, Seaweed *& seaweed );
 		void beEaten();

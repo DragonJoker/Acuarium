@@ -15,7 +15,7 @@ namespace aquarium
 	class AquariumGame
 	{
 	public:
-		AquariumGame( Aquarium & aquarium, TurnAddsMap const & turnsAdds );
+		AquariumGame( Aquarium & aquarium, TurnAddsMap && turnsAdds );
 		void update();
 
 		inline uint32_t getTurn()const

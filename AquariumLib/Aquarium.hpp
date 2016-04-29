@@ -18,19 +18,59 @@ namespace aquarium
 			return !m_fishes.empty();
 		}
 
+		inline auto fishesCount() const
+		{
+			return m_fishes.size();
+		}
+
+		inline auto fishesBegin() const
+		{
+			return m_fishes.begin();
+		}
+
+		inline auto fishesBegin()
+		{
+			return m_fishes.begin();
+		}
+
+		inline auto fishesEnd() const
+		{
+			return m_fishes.end();
+		}
+
+		inline auto fishesEnd()
+		{
+			return m_fishes.end();
+		}
+
 		inline bool hasSeaweeds() const
 		{
 			return !m_seaweeds.empty();
 		}
 
-		inline FishArray const & getFishes() const
+		inline auto seaweedsCount() const
 		{
-			return m_fishes;
+			return m_seaweeds.size();
 		}
 
-		inline SeaweedArray const & getSeaweeds() const
+		inline auto seaweedsBegin() const
 		{
-			return m_seaweeds;
+			return m_seaweeds.begin();
+		}
+
+		inline auto seaweedsBegin()
+		{
+			return m_seaweeds.begin();
+		}
+
+		inline auto seaweedsEnd() const
+		{
+			return m_seaweeds.end();
+		}
+
+		inline auto seaweedsEnd()
+		{
+			return m_seaweeds.end();
 		}
 
 	public:
@@ -48,6 +88,8 @@ namespace aquarium
 	private:
 		FishArray m_fishes;
 		SeaweedArray m_seaweeds;
+
+		friend std::ostream & operator<<( std::ostream & stream, Aquarium const & aqua );
 	};
 
 	std::ostream & operator<<( std::ostream & stream, Aquarium const & aqua );

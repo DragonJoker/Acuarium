@@ -40,7 +40,7 @@ namespace aquarium
 			ActionArray doSwapActions();
 
 			virtual void doPreRender( uint32_t turn ) = 0;
-			virtual void doRender( uint32_t turn ) = 0;
+			virtual void doRender() = 0;
 			virtual void doOnFishBorn( Fish const & fish, Fish const & lhs, Fish const & rhs ) = 0;
 			virtual void doOnFishDie( Fish const & fish ) = 0;
 			virtual void doOnFishEatFish( Fish const & fish, Fish const & prey ) = 0;

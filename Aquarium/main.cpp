@@ -18,8 +18,8 @@ int main( int argc, char * argv[] )
 	}
 
 	{
+		aquarium::AquariumGame game{ aqua, std::move( turns ) };
 		aquarium::render::ConsoleAquariumRenderer renderer{ aqua };
-		aquarium::AquariumGame game{ aqua, turns };
 		renderer.render( game.getTurn() );
 
 		while ( aqua.hasFishes() || aqua.hasSeaweeds() )

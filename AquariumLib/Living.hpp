@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Signal.hpp"
 
@@ -8,6 +8,11 @@ namespace aquarium
 	{
 	protected:
 		Living( uint16_t age, uint16_t health );
+		~Living() = default;
+		Living( Living const & ) = delete;
+		Living & operator=( Living const & ) = delete;
+		Living( Living && ) = default;
+		Living & operator=( Living && ) = default;
 
 	public:
 		inline bool isAlive() const

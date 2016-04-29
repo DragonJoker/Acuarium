@@ -24,12 +24,12 @@ namespace aquarium
 	std::ostream & operator<<( std::ostream & stream, Aquarium const & aqua )
 	{
 		stream << "Seaweeds: ";
-		stream << aqua.getSeaweeds().size() << "\n";
+		stream << aqua.m_seaweeds.size() << "\n";
 		uint16_t age{ 0 };
 		uint16_t health{ 0 };
 		uint32_t count{ 0 };
 
-		for ( auto const & seaweed : aqua.getSeaweeds() )
+		for ( auto const & seaweed : aqua.m_seaweeds )
 		{
 			if ( seaweed.getAge() != age && seaweed.getHealth() != health && count > 0 )
 			{
@@ -48,9 +48,9 @@ namespace aquarium
 		}
 
 		stream << "Fishes: ";
-		stream << aqua.getFishes().size() << "\n";
+		stream << aqua.m_fishes.size() << "\n";
 
-		for ( auto const & fish : aqua.getFishes() )
+		for ( auto const & fish : aqua.m_fishes )
 		{
 			stream << fish << "\n";
 		}
@@ -92,7 +92,7 @@ namespace aquarium
 		stream.ignore( std::numeric_limits< std::streamsize >::max(), '\n' );
 		RaceFactory factory;
 
-		for ( size_t i{ 0 }; i < count; ++i )
+		for ( size_t j{ 0 }; j < count; ++j )
 		{
 			std::string raceName;
 			stream >> raceName;
