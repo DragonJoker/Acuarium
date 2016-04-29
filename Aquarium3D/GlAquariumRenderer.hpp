@@ -17,7 +17,7 @@ namespace aquarium
 
 		private:
 			virtual void doPreRender( uint32_t turn );
-			virtual void doRender( uint32_t turn );
+			virtual void doRender();
 
 		private:
 			GlSeaweedRenderer & m_glSeaweedRenderer;

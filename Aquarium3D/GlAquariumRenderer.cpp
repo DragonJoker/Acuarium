@@ -27,7 +27,7 @@ namespace aquarium
 		{
 		}
 
-		void GlAquariumRenderer::doRender( uint32_t )
+		void GlAquariumRenderer::doRender()
 		{
 		}
 	}

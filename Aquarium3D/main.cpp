@@ -209,7 +209,7 @@ int main( int argc, char * argv[] )
 				glClearColor( 0.0f, 0.7f, 0.9f, 1.0f );
 				glEnable( GL_CULL_FACE );
 				glEnable( GL_DEPTH_TEST );
-				aquarium::AquariumGame game{ aqua, turns };
+				aquarium::AquariumGame game{ aqua, std::move( turns ) };
 				aquarium::render::GlAquariumRenderer renderer{ aqua };
 				aquarium::render::ConsoleAquariumRenderer console{ aqua };
 				console.render( game.getTurn() );
