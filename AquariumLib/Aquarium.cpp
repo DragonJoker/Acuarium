@@ -18,6 +18,7 @@ namespace aquarium
 
 	void Aquarium::addSeaweed( Seaweed && seaweed )
 	{
+		seaweed.onDie.connect( [this]( Seaweed const & seaweed ) { onSeaweedDie( seaweed ); } );
 		m_seaweeds.emplace_back( std::move( seaweed ) );
 	}
 

@@ -15,6 +15,11 @@ namespace aquarium
 		Living & operator=( Living && ) = default;
 
 	public:
+		inline uint64_t getId() const
+		{
+			return m_id;
+		}
+
 		inline bool isAlive() const
 		{
 			return m_health > 0;
@@ -40,8 +45,10 @@ namespace aquarium
 		virtual void doDie() = 0;
 
 	private:
+		uint64_t m_id;
 		uint16_t m_health;
 		uint16_t m_age;
+		static uint64_t sm_count;
 
 		friend std::istream & operator>>( std::istream & stream, Living & living );
 	};

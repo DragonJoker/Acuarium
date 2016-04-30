@@ -2,8 +2,11 @@
 
 namespace aquarium
 {
+	uint64_t Living::sm_count = 0;
+
 	Living::Living( uint16_t age, uint16_t health )
-		: m_age{ age }
+		: m_id{ ++sm_count }
+		, m_age{ age }
 		, m_health{ health }
 	{
 	}

@@ -36,6 +36,7 @@ namespace aquarium
 
 				if ( child )
 				{
+					m_aquarium.onSeaweedBorn( *child, seaweed );
 					newSeaweeds.push_back( std::move( *child ) );
 				}
 			}

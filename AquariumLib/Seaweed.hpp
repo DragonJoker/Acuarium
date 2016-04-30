@@ -20,7 +20,6 @@ namespace aquarium
 
 	public:
 		Signal< std::function< void( Seaweed const & seaweed ) > > onDie;
-		Signal< std::function< void( Seaweed const & seaweed, Seaweed const & parent ) > > onBorn;
 
 	private:
 		virtual void doDie();

@@ -38,7 +38,6 @@ namespace aquarium
 		{
 			uint16_t const half( getHealth() / 2 );
 			child = std::make_unique< Seaweed >( 0u, half );
-			child->onBorn( *child, *this );
 			damage( half );
 		}
 		else
