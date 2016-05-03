@@ -16,5 +16,15 @@ namespace aquarium
 		{
 			doRender( seaweed );
 		}
+
+		void SeaweedRenderer::renderBorn( Seaweed const & seaweed, Seaweed const & parent )
+		{
+			doRenderBorn( seaweed, parent );
+		}
+
+		void SeaweedRenderer::renderDie( Seaweed const & seaweed )
+		{
+			doRenderDie( seaweed );
+		}
 	}
 }

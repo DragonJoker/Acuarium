@@ -12,5 +12,13 @@ namespace aquarium
 			std::cout << " " << std::setw( 2 ) << std::left << seaweed.getHealth();
 			std::cout << "\n";
 		}
+
+		void ConsoleSeaweedRenderer::doRenderBorn( Seaweed const &, Seaweed const & )
+		{
+		}
+
+		void ConsoleSeaweedRenderer::doRenderDie( Seaweed const & )
+		{
+		}
 	}
 }
